@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "interconnect-ai"
+version = "0.1.0"
+description = "Autonomous Grid Interconnection Reviewer & Technical Screening Copilot"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "InterconnectAI Contributors" }
+]
+dependencies = [
+    "pydantic>=2.7.0,<3.0.0",
+    "pydantic-settings>=2.2.0,<3.0.0",
+    "fastapi>=0.111.0,<1.0.0",
+    "uvicorn[standard]>=0.30.0,<1.0.0",
+    "httpx>=0.27.0,<1.0.0",
+    "langchain>=0.2.0,<0.4.0",
+    "langchain-core>=0.2.0,<0.4.0",
+    "langgraph>=0.1.0,<0.4.0",
+    "qdrant-client>=1.9.0,<2.0.0",
+    "pymupdf>=1.24.0,<2.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+    "celery>=5.4.0,<6.0.0",
+    "redis>=5.0.0,<6.0.0",
+    "numpy>=1.26.0,<3.0.0",
+    "pandas>=2.2.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.4.0",
+    "pre-commit>=3.7.0",
+    "mypy>=1.10.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "api*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests", "evals"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
