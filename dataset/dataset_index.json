@@ -1,0 +1,96 @@
+{
+  "applications": {
+    "APP-001-PASS-ROOFTOP-SOLAR": {
+      "application_id": "APP-001-PASS-ROOFTOP-SOLAR",
+      "applicant_name": "SunTech Logistics LLC",
+      "project_type": "Commercial Rooftop Solar PV",
+      "capacity_kw": 250.0,
+      "utility": "Pacific Gas & Electric (PG&E)",
+      "feeder_id": "Fremont-12-04",
+      "calculated_penetration_pct": 10.0,
+      "expected_outcome": "FAST_TRACK_APPROVED",
+      "failing_screens": [],
+      "required_citations": [
+        "Rule 21 Section C.1",
+        "Rule 21 Section D Screen D",
+        "IEEE 1547-2018 Clause 5.1"
+      ],
+      "files": {
+        "application_form": "application_form.pdf",
+        "inverter_cutsheet": "inverter_cutsheet.pdf",
+        "single_line_diagram": "single_line_diagram.pdf",
+        "grid_telemetry": "grid_telemetry.json"
+      }
+    },
+    "APP-002-FAIL-PENETRATION-15PCT": {
+      "application_id": "APP-002-FAIL-PENETRATION-15PCT",
+      "applicant_name": "Golden State Agripower Inc.",
+      "project_type": "Ground-Mount Solar Farm",
+      "capacity_kw": 1200.0,
+      "utility": "Southern California Edison (SCE)",
+      "feeder_id": "Kern-08-02",
+      "calculated_penetration_pct": 32.0,
+      "expected_outcome": "DEFICIENCY_ISSUED",
+      "failing_screens": [
+        "Screen D: Aggregate Feeder Penetration (15% Peak Load Screen)"
+      ],
+      "required_citations": [
+        "Rule 21 Section D Screen D",
+        "Rule 21 Section C.2"
+      ],
+      "files": {
+        "application_form": "application_form.pdf",
+        "inverter_cutsheet": "inverter_cutsheet.pdf",
+        "single_line_diagram": "single_line_diagram.pdf",
+        "grid_telemetry": "grid_telemetry.json"
+      }
+    },
+    "APP-003-FAIL-NONCERTIFIED-INV": {
+      "application_id": "APP-003-FAIL-NONCERTIFIED-INV",
+      "applicant_name": "Horizon Manufacturing Corp.",
+      "project_type": "Industrial Solar PV",
+      "capacity_kw": 500.0,
+      "utility": "Pacific Gas & Electric (PG&E)",
+      "feeder_id": "Coliseum-04-11",
+      "calculated_penetration_pct": 10.48,
+      "expected_outcome": "DEFICIENCY_ISSUED",
+      "failing_screens": [
+        "Screen B: Certified Equipment (Inverter Compliance)"
+      ],
+      "required_citations": [
+        "Rule 21 Section D Screen B",
+        "IEEE 1547-2018 Clause 5.1",
+        "Rule 21 Section C.2"
+      ],
+      "files": {
+        "application_form": "application_form.pdf",
+        "inverter_cutsheet": "inverter_cutsheet.pdf",
+        "single_line_diagram": "single_line_diagram.pdf",
+        "grid_telemetry": "grid_telemetry.json"
+      }
+    },
+    "APP-004-FAIL-MISSING-DISCONNECT": {
+      "application_id": "APP-004-FAIL-MISSING-DISCONNECT",
+      "applicant_name": "Pacific Coast Storage Partners",
+      "project_type": "Battery Energy Storage System (BESS)",
+      "capacity_kw": 750.0,
+      "utility": "San Diego Gas & Electric (SDG&E)",
+      "feeder_id": "Coronado-21-06",
+      "calculated_penetration_pct": 13.12,
+      "expected_outcome": "DEFICIENCY_ISSUED",
+      "failing_screens": [
+        "Screen H: Manual Disconnect Switch and Safety Requirements"
+      ],
+      "required_citations": [
+        "Rule 21 Section D Screen H",
+        "Rule 21 Section C.2"
+      ],
+      "files": {
+        "application_form": "application_form.pdf",
+        "inverter_cutsheet": "inverter_cutsheet.pdf",
+        "single_line_diagram": "single_line_diagram.pdf",
+        "grid_telemetry": "grid_telemetry.json"
+      }
+    }
+  }
+}

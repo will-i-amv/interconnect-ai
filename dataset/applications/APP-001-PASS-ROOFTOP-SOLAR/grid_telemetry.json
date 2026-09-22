@@ -1,0 +1,11 @@
+{
+  "feeder_id": "Fremont-12-04",
+  "utility": "Pacific Gas & Electric (PG&E)",
+  "nominal_voltage_kv": 12.47,
+  "annual_peak_load_kw": 4500.0,
+  "minimum_daytime_load_kw": 1800.0,
+  "existing_connected_generation_kw": 200.0,
+  "proposed_project_capacity_kw": 250.0,
+  "substation_transformer_rating_kva": 10000.0,
+  "available_fault_duty_mva": 180.0
+}

@@ -1,0 +1,11 @@
+{
+  "feeder_id": "Kern-08-02",
+  "utility": "Southern California Edison (SCE)",
+  "nominal_voltage_kv": 12.47,
+  "annual_peak_load_kw": 5000.0,
+  "minimum_daytime_load_kw": 2100.0,
+  "existing_connected_generation_kw": 400.0,
+  "proposed_project_capacity_kw": 1200.0,
+  "substation_transformer_rating_kva": 10000.0,
+  "available_fault_duty_mva": 180.0
+}

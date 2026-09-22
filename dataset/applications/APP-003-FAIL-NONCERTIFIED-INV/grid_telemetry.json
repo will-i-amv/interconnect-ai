@@ -1,0 +1,11 @@
+{
+  "feeder_id": "Coliseum-04-11",
+  "utility": "Pacific Gas & Electric (PG&E)",
+  "nominal_voltage_kv": 12.47,
+  "annual_peak_load_kw": 6200.0,
+  "minimum_daytime_load_kw": 2800.0,
+  "existing_connected_generation_kw": 150.0,
+  "proposed_project_capacity_kw": 500.0,
+  "substation_transformer_rating_kva": 10000.0,
+  "available_fault_duty_mva": 180.0
+}
