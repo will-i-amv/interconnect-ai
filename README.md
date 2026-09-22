@@ -1,4 +1,4 @@
-﻿# InterconnectAI
+# InterconnectAI
 
 **Autonomous Grid Interconnection Reviewer & Technical Screening Copilot**
 
@@ -67,7 +67,7 @@ However, each application requires hours of senior distribution engineer time:
 
 ## Ticket Directory & Implementation Plan
 
-Execution is structured into 6 sequential phases. The core AI engineering scope encompasses **Phases 1 through 5**. **Phase 6** is the optional **Compound AI** extension.
+Execution is structured into 7 sequential phases. The core AI engineering scope encompasses **Phases 1 through 5**. **Phases 6 and 7** are optional production and modeling extensions.
 
 ```
 Phase 1: Foundation & Schemas (T-101 - T-103)
@@ -76,6 +76,7 @@ Phase 3: Agentic Screening State Machine (T-107 - T-110)
 Phase 4: Full-Stack Serving & Streaming UI (T-111 - T-114)
 Phase 5: Automated Evals & Observability (T-115 - T-117)
 Phase 6: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-118 - T-120)
+Phase 7: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion (T-121 - T-123)
 ```
 
 ### Phase 1 — Foundation & Schemas
@@ -131,6 +132,18 @@ Phase 6: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-118 - T-120)
 | `T-118` | `ML-DATA` | Ingest historical interconnection queue dataset (e.g., LBNL Queued Up dataset) and engineer features | `notebooks/01_queue_eda.ipynb`, `src/ml/feature_pipeline.py` |
 | `T-119` | `ML-MODEL` | Train & tune LightGBM/XGBoost regressor to predict **Study Completion Delay (days)** & **Upgrade Cost ($)** | `src/ml/train.py`, `models/queue_delay_model.joblib`, model comparison report |
 | `T-120` | `COMPOUND`| Expose trained ML model as an internal LangGraph tool (`predict_queue_delay_risk`) | Tool integration in `src/tools/ml_forecaster.py`, UI risk score badge |
+
+---
+
+### Phase 7 — [OPTIONAL ADD-ON] Production Hardening & Live Utility Ingestion
+> [!NOTE]
+> **This phase is strictly optional.** It builds upon the complete system to introduce enterprise production capabilities: live regulatory scraping, cloud object storage, and multi-utility jurisdiction management.
+
+| Ticket | Category | Description | Deliverables |
+|---|---|---|---|
+| `T-121` | `INGEST-PROD` | Hybrid Regulatory Ingestion: Remote fetcher with hash-based caching, version tracking, and offline fallback | `src/rag/remote_fetcher.py`, CLI `--fetch-remote`, `dataset/tariffs/cache/` |
+| `T-122` | `STORAGE` | Cloud Object Storage Integration (S3 / MinIO) for multi-tenant PDF and SLD artifact archival | `src/storage/s3_client.py`, docker-compose MinIO service |
+| `T-123` | `MULTI-JURIS` | Multi-jurisdiction tariff router: Dynamic switching between CA Rule 21, NY Standard Interconnection Requirements (SIR), and PJM Manual 14 | `src/rag/router.py`, jurisdiction config schema |
 
 ---
 
