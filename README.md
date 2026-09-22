@@ -50,6 +50,7 @@ However, each application requires hours of senior distribution engineer time:
 2. **Deterministic Screen Integrity (Zero Math Hallucinations)**: The LLM is strictly forbidden from doing distribution math (e.g., feeder penetration percentages, transformer thermal capacity limits). All calculations are executed by isolated, unit-tested deterministic Python calculation tools; the LLM merely structures inputs and formats outputs.
 3. **Strict Citation Attribution**: Every deficiency or approval citation must map directly to an exact section in the ingested utility tariff handbook (e.g., `Rule 21 Section F.3.a`) with bounding-box or page-level grounding.
 4. **Human-in-the-Loop Gateway**: The agent can prepare deficiency letters or recommend fast-track approvals, but cannot submit them to the applicant without explicit engineer authorization in the UI.
+5. **Device-Agnostic Execution**: All local embedding, reranking, and multimodal inference pipelines must be hardware-agnostic from Day 1, automatically detecting and utilizing NVIDIA CUDA or Apple MPS acceleration if available, while gracefully falling back to CPU execution without manual code changes.
 
 ---
 
@@ -76,7 +77,7 @@ Phase 3: Agentic Screening State Machine (T-107 - T-110)
 Phase 4: Full-Stack Serving & Streaming UI (T-111 - T-114)
 Phase 5: Automated Evals & Observability (T-115 - T-117)
 Phase 6: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-118 - T-120)
-Phase 7: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion (T-121 - T-123)
+Phase 7: [OPTIONAL ADD-ON] Production Hardening & Advanced AI (T-121 - T-126)
 ```
 
 ### Phase 1 — Foundation & Schemas
@@ -93,7 +94,7 @@ Phase 7: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion (T-121 - T-123)
 |---|---|---|---|
 | `T-104` | `RAG` | Ingestion pipeline with layout-aware PDF chunking (Docling/PyMuPDF) | `src/rag/ingest.py`, hierarchical section-preserving chunker |
 | `T-105` | `RAG` | Vector database setup (Qdrant or pgvector) + BM25 keyword index | Hybrid retriever combining dense embeddings + BM25 with RRF |
-| `T-106` | `RAG` | Cross-encoder reranking pipeline (BGE-Reranker or Cohere API) | `src/rag/reranker.py`, citation tracking with exact page numbers |
+| `T-106` | `RAG` | Cross-encoder reranking pipeline (BGE-Reranker or Cohere API) with device-agnostic PyTorch/ONNX runtime (CUDA/MPS/CPU fallback) | `src/rag/reranker.py`, citation tracking with exact page numbers |
 
 ### Phase 3 — Agentic State Machine & Deterministic Screening
 
@@ -101,7 +102,7 @@ Phase 7: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion (T-121 - T-123)
 |---|---|---|---|
 | `T-107` | `AGENT` | LangGraph state machine definition: application state, history, error rollback | `src/agents/state.py`, `src/agents/graph.py` |
 | `T-108` | `TOOLS` | Deterministic screening tools: 15% penetration screen, anti-islanding check, short-circuit ratio | `src/tools/grid_screens.py`, comprehensive unit test suite |
-| `T-109` | `VISION` | Multimodal extractor for Single-Line Diagrams & Equipment Cut-Sheets | `src/agents/vision_extractor.py`, extracts inverter model & switch config |
+| `T-109` | `VISION` | Multimodal extractor for Single-Line Diagrams & Equipment Cut-Sheets with device-agnostic local vision inference support | `src/agents/vision_extractor.py`, extracts inverter model & switch config |
 | `T-110` | `AGENT` | Deficiency & Approval synthesis node: generates structured formal letters with citations | `src/agents/letter_generator.py`, Markdown/PDF exportable memo |
 
 ### Phase 4 — Full-Stack Serving & UI
@@ -144,6 +145,9 @@ Phase 7: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion (T-121 - T-123)
 | `T-121` | `INGEST-PROD` | Hybrid Regulatory Ingestion: Remote fetcher with hash-based caching, version tracking, and offline fallback | `src/rag/remote_fetcher.py`, CLI `--fetch-remote`, `dataset/tariffs/cache/` |
 | `T-122` | `STORAGE` | Cloud Object Storage Integration (S3 / MinIO) for multi-tenant PDF and SLD artifact archival | `src/storage/s3_client.py`, docker-compose MinIO service |
 | `T-123` | `MULTI-JURIS` | Multi-jurisdiction tariff router: Dynamic switching between CA Rule 21, NY Standard Interconnection Requirements (SIR), and PJM Manual 14 | `src/rag/router.py`, jurisdiction config schema |
+| `T-124` | `LOCAL-LLM` | Self-Hosted Open-Source LLM Serving: Air-gapped vLLM / Ollama engine running open-weight models (Llama 3.3 / Qwen 2.5) for NERC-CIP utility data sovereignty | `docker-compose.local-llm.yml`, local model provider switch in `src/agents/` |
+| `T-125` | `GPU-OPT` | Hardware-Accelerated Inference & Reranking: CUDA/TensorRT and ONNX Runtime optimization for BGE-Reranker and local embeddings | `src/rag/accelerators.py`, GPU latency benchmark report |
+| `T-126` | `FINE-TUNE` | Vision-Language Model (VLM) Fine-Tuning: LoRA/QLoRA fine-tuning of open VLM (Qwen2.5-VL) on electrical Single-Line Diagrams for structured Pydantic extraction | `notebooks/02_vlm_lora_finetune.ipynb`, LoRA adapters in `models/sld_lora/` |
 
 ---
 
