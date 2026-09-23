@@ -10,7 +10,6 @@ Note: Generated PDF files are transient/build artifacts and ignored in git.
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 import pymupdf
@@ -42,6 +41,7 @@ def parse_markdown_to_sections(md_path: Path) -> tuple[str, str, list[tuple[str,
     sections: list[tuple[str, str]] = []
 
     current_sec_title = ""
+    current_major_title = ""
     current_sec_body: list[str] = []
 
     for line in lines:
@@ -57,17 +57,32 @@ def parse_markdown_to_sections(md_path: Path) -> tuple[str, str, list[tuple[str,
             subtitle = stripped[3:].strip()
             continue
 
-        # Section Headings (### or ####)
-        if re.match(r"^#{3,4}\s+", stripped):
+        # Level 3 Major Section (### )
+        if stripped.startswith("### ") and not stripped.startswith("#### "):
             if current_sec_title and current_sec_body:
                 body_text = "\n".join(current_sec_body).strip()
                 if body_text:
                     sections.append((current_sec_title, body_text))
                 current_sec_body = []
 
-            # Clean markdown formatting like bolding from header
-            header_text = re.sub(r"^#{3,4}\s+", "", stripped)
-            current_sec_title = header_text.replace("**", "").strip()
+            header_text = stripped[4:].replace("**", "").strip()
+            current_major_title = header_text
+            current_sec_title = header_text
+            continue
+
+        # Level 4 Sub-section (#### )
+        if stripped.startswith("#### "):
+            if current_sec_title and current_sec_body:
+                body_text = "\n".join(current_sec_body).strip()
+                if body_text:
+                    sections.append((current_sec_title, body_text))
+                current_sec_body = []
+
+            header_text = stripped[5:].replace("**", "").strip()
+            if current_major_title:
+                current_sec_title = f"{current_major_title} - {header_text}"
+            else:
+                current_sec_title = header_text
             continue
 
         # Skip horizontal dividers

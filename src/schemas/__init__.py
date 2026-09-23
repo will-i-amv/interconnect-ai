@@ -18,6 +18,11 @@ from src.schemas.screening import (
     ScreenResult,
     ScreenStatus,
 )
+from src.schemas.tariff import (
+    IngestionSummary,
+    TariffChunk,
+    TariffJurisdiction,
+)
 
 __all__ = [
     # Application intake & electrical components
@@ -36,4 +41,8 @@ __all__ = [
     "ScreenResult",
     "ScreenStatus",
     "ScreeningReport",
+    # Tariff RAG chunks & ingestion
+    "IngestionSummary",
+    "TariffChunk",
+    "TariffJurisdiction",
 ]
