@@ -79,3 +79,31 @@ class IngestionSummary(BaseModel):
         default_factory=lambda: datetime.now(UTC),
         description="Run completion timestamp",
     )
+
+
+class RetrievedChunk(BaseModel):
+    """Result of hybrid retrieval combining dense semantic and BM25 sparse search."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    chunk: TariffChunk = Field(..., description="The underlying retrieved tariff chunk")
+    fused_score: float = Field(
+        ..., description="Reciprocal Rank Fusion (RRF) fused relevance score"
+    )
+    dense_rank: int | None = Field(
+        default=None,
+        ge=1,
+        description="1-indexed rank from dense vector retrieval, if matched",
+    )
+    dense_score: float | None = Field(
+        default=None,
+        description="Cosine similarity score from dense vector search, if matched",
+    )
+    bm25_rank: int | None = Field(
+        default=None,
+        ge=1,
+        description="1-indexed rank from BM25 sparse retrieval, if matched",
+    )
+    bm25_score: float | None = Field(
+        default=None, description="Raw BM25 score from keyword retrieval, if matched"
+    )
