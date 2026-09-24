@@ -17,6 +17,13 @@ from src.rag.pdf_parser import (
     ParsedSection,
     detect_jurisdiction,
 )
+from src.rag.reranker import (
+    BaseReranker,
+    BGEReranker,
+    DeterministicMockReranker,
+    build_citation,
+    get_reranker,
+)
 from src.rag.retriever import HybridRetriever
 from src.rag.vector_store import QdrantVectorStore
 
@@ -38,8 +45,13 @@ __all__ = [
     "BM25Index",
     "QdrantVectorStore",
     "tokenize_regulatory_text",
-    # Hybrid Retrieval
+    # Hybrid Retrieval & Reranker
+    "BaseReranker",
+    "BGEReranker",
+    "DeterministicMockReranker",
     "HybridRetriever",
+    "build_citation",
+    "get_reranker",
 ]
 
 

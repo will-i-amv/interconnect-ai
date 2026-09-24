@@ -20,8 +20,10 @@ from src.schemas.screening import (
 )
 from src.schemas.tariff import (
     IngestionSummary,
+    RerankedResult,
     RetrievedChunk,
     TariffChunk,
+    TariffCitation,
     TariffJurisdiction,
 )
 
@@ -44,7 +46,9 @@ __all__ = [
     "ScreeningReport",
     # Tariff RAG chunks & ingestion
     "IngestionSummary",
+    "RerankedResult",
     "RetrievedChunk",
+    "TariffCitation",
     "TariffChunk",
     "TariffJurisdiction",
 ]

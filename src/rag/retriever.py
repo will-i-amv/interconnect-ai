@@ -4,11 +4,20 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 from src.rag.bm25 import BM25Index
 from src.rag.embeddings import BaseEmbeddingService
 from src.rag.vector_store import QdrantVectorStore
-from src.schemas.tariff import RetrievedChunk, TariffChunk, TariffJurisdiction
+from src.schemas.tariff import (
+    RerankedResult,
+    RetrievedChunk,
+    TariffChunk,
+    TariffJurisdiction,
+)
+
+if TYPE_CHECKING:
+    from src.rag.reranker import BaseReranker
 
 logger = logging.getLogger(__name__)
 
@@ -171,3 +180,32 @@ class HybridRetriever:
             )
             for fused_score, chunk, d_rank, d_score, b_rank, b_score in top_fused
         ]
+
+    def retrieve_and_rerank(
+        self,
+        query: str,
+        reranker: BaseReranker,
+        top_k: int = 5,
+        candidate_pool_size: int = 20,
+        jurisdiction: TariffJurisdiction | None = None,
+    ) -> list[RerankedResult]:
+        """Perform two-stage retrieval: hybrid retrieval followed by cross-encoder reranking.
+
+        Args:
+            query: User or screening evaluation query text.
+            reranker: BaseReranker cross-encoder instance.
+            top_k: Number of final reranked results to return.
+            candidate_pool_size: Number of candidate chunks to fetch from hybrid retrieval.
+            jurisdiction: Optional regulatory jurisdiction filter.
+
+        Returns:
+            Ordered list of RerankedResult models with cross-attention scores and citations.
+        """
+        candidates = self.retrieve(
+            query=query,
+            top_k=candidate_pool_size,
+            jurisdiction=jurisdiction,
+            dense_top_k=candidate_pool_size,
+            bm25_top_k=candidate_pool_size,
+        )
+        return reranker.rerank(query=query, candidates=candidates, top_n=top_k)

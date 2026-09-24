@@ -107,3 +107,49 @@ class RetrievedChunk(BaseModel):
     bm25_score: float | None = Field(
         default=None, description="Raw BM25 score from keyword retrieval, if matched"
     )
+
+
+class TariffCitation(BaseModel):
+    """Formal regulatory citation for screening reports, audit logs, and deficiency memos."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    citation_id: str = Field(..., description="Unique deterministic citation identifier")
+    document_title: str = Field(..., description="Canonical standard title (e.g. Electric Rule 21)")
+    jurisdiction: TariffJurisdiction = Field(
+        ..., description="Regulatory body/jurisdiction identifier"
+    )
+    section_hierarchy: list[str] = Field(
+        ..., min_length=1, description="Breadcrumb hierarchy leading to the cited section"
+    )
+    section_title: str = Field(..., description="Immediate section or screen title")
+    page_number: int = Field(..., ge=1, description="1-indexed exact document page number")
+    source_filename: str = Field(..., description="Source filename of standard PDF or Markdown")
+    relevance_score: float = Field(
+        ..., ge=0.0, le=1.0, description="Cross-encoder relevance score normalized to [0, 1]"
+    )
+    citation_label: str = Field(
+        ..., description="Formatted label, e.g. [CA Rule 21 § Section D > Screen D, p. 14]"
+    )
+    exact_quote: str = Field(
+        ..., description="Verbatim excerpt or key sentence from the cited clause"
+    )
+    chunk_id: str = Field(..., description="Identifier of the underlying source TariffChunk")
+
+
+class RerankedResult(BaseModel):
+    """Candidate chunk scored and ranked by the cross-encoder with citation metadata."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    chunk: TariffChunk = Field(..., description="The underlying retrieved tariff chunk")
+    score: float = Field(
+        ..., ge=0.0, le=1.0, description="Cross-encoder relevance score normalized to [0, 1]"
+    )
+    rank: int = Field(..., ge=1, description="1-indexed final reranked position")
+    original_fused_score: float | None = Field(
+        default=None, description="Stage 1 RRF fused score before reranking, if available"
+    )
+    citation: TariffCitation = Field(
+        ..., description="Structured citation metadata with exact page numbers"
+    )
