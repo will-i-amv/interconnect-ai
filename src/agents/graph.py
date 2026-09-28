@@ -11,6 +11,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
+from src.agents.letter_generator import generate_letter_markdown
 from src.agents.state import (
     AuditAction,
     AuditEntry,
@@ -293,12 +294,12 @@ def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
         engineer_sign_off_required=requires_human_override,
     )
 
-    letter_md = (
-        f"# Interconnection Review Notice: {app_id}\n\n"
-        f"**Outcome**: {overall_outcome}\n"
-        f"**Screens Evaluated**: {len(screen_results)}\n"
-        f"**Deficiencies**: {len(deficiencies)}\n"
-    )
+    synthesis_state: InterconnectionState = {
+        **state,
+        "overall_outcome": overall_outcome,
+        "screening_report": report,
+    }
+    letter_md = generate_letter_markdown(synthesis_state)
 
     step = WorkflowStep.COMPLETE if not requires_human_override else WorkflowStep.SYNTHESIS
 
@@ -311,13 +312,23 @@ def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
         "audit_log": [
             AuditEntry(
                 step=WorkflowStep.SYNTHESIS,
+                action=AuditAction.TOOL_INVOCATION,
+                message="Synthesized formal interconnection decision memo with citations",
+                details={
+                    "outcome": overall_outcome,
+                    "deficiencies_count": len(deficiencies),
+                    "letter_length_chars": len(letter_md),
+                },
+            ),
+            AuditEntry(
+                step=WorkflowStep.SYNTHESIS,
                 action=AuditAction.STATE_TRANSITION,
                 message=f"Screening report synthesized with outcome: {overall_outcome}",
                 details={
                     "outcome": overall_outcome,
                     "requires_human_override": requires_human_override,
                 },
-            )
+            ),
         ],
     }
 
