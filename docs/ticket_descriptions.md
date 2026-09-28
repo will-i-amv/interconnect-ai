@@ -8,7 +8,7 @@ Execution is structured into 7 sequential phases. The core AI engineering scope 
 Phase 1: Foundation & Schemas (T-101 - T-103)
 Phase 2: Hybrid RAG & Knowledge Retrieval (T-104 - T-106)
 Phase 3: Agentic Screening State Machine (T-107 - T-110)
-Phase 4: Full-Stack Serving & Streaming UI (T-111 - T-114)
+Phase 4: Full-Stack Serving & Streamlit UI (T-111 - T-114)
 Phase 5: Automated Evals & Observability (T-115 - T-117)
 Phase 6: [OPTIONAL ADD-ON] Production Hardening & Advanced AI (T-118 - T-123)
 Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-124 - T-126)
@@ -47,14 +47,15 @@ Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-124 - T-126)
 
 ---
 
-### Phase 4 — Full-Stack Serving & UI
+### Phase 4 — Full-Stack Serving & Streamlit UI
 
 | Ticket | Category | Description | Deliverables |
 |---|---|---|---|
-| `T-111` | `API` | FastAPI async backend with Celery/Redis queue for async document extraction | `api/routes/applications.py`, `/api/screen/stream` SSE endpoint |
-| `T-112` | `FRONTEND` | Next.js 14 dashboard: Queue list, application status, pass/fail badges | `frontend/app/dashboard/`, Tailwind/shadcn components |
-| `T-113` | `FRONTEND` | Split-screen Review Console: PDF Viewer on left, live Agent reasoning log on right | `frontend/components/pdf-viewer.tsx`, `frontend/components/agent-stream.tsx` |
-| `T-114` | `HUMAN` | Human-in-the-loop override interface: edit extracted parameters, sign-off on approvals | `frontend/components/override-modal.tsx`, audit log tracker |
+| `T-111` | `API` | FastAPI async backend with runner endpoint for application screening execution | `api/routes/applications.py`, `/api/screen/run` and `/api/screen/stream` endpoints |
+| `T-112` | `STREAMLIT` | Streamlit interactive dashboard: Application catalog browser, queue status metrics, filterable review table with pass/fail badges | `frontend/app.py`, `frontend/views/dashboard.py` |
+| `T-113` | `STREAMLIT` | Split-screen Review Console: Embedded multi-page PDF viewer on left, live LangGraph reasoning log & screen evaluation matrix on right | `frontend/views/review_console.py`, `frontend/components/pdf_viewer.py` |
+| `T-114` | `HUMAN` | Human-in-the-loop override interface (`st.dialog` modal): edit extracted parameters, sign-off on approvals with audit trail | `frontend/components/override_dialog.py`, audit log tracker |
+
 
 ---
 

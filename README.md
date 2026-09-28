@@ -23,10 +23,10 @@ However, each application requires hours of senior distribution engineer time:
 
 ```
                                   +--------------------------------------------------+
-                                  |            Next.js / TypeScript Frontend         |
-                                  |    (Split-screen PDF Viewer + Review Console)    |
+                                  |            Streamlit Review Console              |
+                                  |    (Split-screen PDF Viewer + Engineer Workflow) |
                                   +------------------------+-------------------------+
-                                                           | (SSE / REST API)
+                                                           | (REST API / Direct Import)
                                   +------------------------v-------------------------+
                                   |                 FastAPI Backend                  |
                                   |          (Async Job Runner + Pydantic)           |
@@ -46,7 +46,7 @@ However, each application requires hours of senior distribution engineer time:
 
 ### Core Architecture Constraints & Contracts
 
-1. **Decoupled Backend & Frontend**: The backend is an asynchronous FastAPI service exposing streaming endpoints (Server-Sent Events) for real-time agent reasoning steps. The frontend is a Next.js 14 / TypeScript application with zero heavy Python dependencies.
+1. **Unified Python Full-Stack & Fast Serving**: The system provides an interactive Streamlit engineering console backed by an asynchronous FastAPI runner. Using Streamlit preserves pure Python end-to-end, enabling direct reuse of Pydantic validation schemas, instant component iteration, and zero Node.js/npm overhead.
 2. **Deterministic Screen Integrity (Zero Math Hallucinations)**: The LLM is strictly forbidden from doing distribution math (e.g., feeder penetration percentages, transformer thermal capacity limits). All calculations are executed by isolated, unit-tested deterministic Python calculation tools; the LLM merely structures inputs and formats outputs.
 3. **Strict Citation Attribution**: Every deficiency or approval citation must map directly to an exact section in the ingested utility tariff handbook (e.g., `Rule 21 Section F.3.a`) with bounding-box or page-level grounding.
 4. **Human-in-the-Loop Gateway**: The agent can prepare deficiency letters or recommend fast-track approvals, but cannot submit them to the applicant without explicit engineer authorization in the UI.
@@ -73,7 +73,7 @@ The engineering roadmap is structured into 7 sequential phases. The core AI engi
 - **Phase 1: Foundation & Schemas** (`T-101` – `T-103`): Environment setup, benchmark application dataset, and Pydantic engineering schemas.
 - **Phase 2: Hybrid RAG & Knowledge Retrieval** (`T-104` – `T-106`): Layout-aware PDF chunker, Qdrant vector database, BM25 keyword index with RRF, and cross-encoder reranker.
 - **Phase 3: Agentic Screening State Machine** (`T-107` – `T-110`): LangGraph state machine, deterministic screening tools (Rule 21 & IEEE 1547), multimodal vision extractor for SLDs and cut-sheets, and formal decision letter generator.
-- **Phase 4: Full-Stack Serving & Streaming UI** (`T-111` – `T-114`): FastAPI async backend, Celery/Redis queue, Next.js review console, and human-in-the-loop override modal.
+- **Phase 4: Full-Stack Serving & Streamlit UI** (`T-111` – `T-114`): FastAPI async runner, Streamlit interactive dashboard, split-screen review console with live LangGraph reasoning, and human-in-the-loop override modal.
 - **Phase 5: Automated Evals & Observability** (`T-115` – `T-117`): Langfuse/Phoenix tracing, golden dataset benchmarks, and DeepEval regulatory citation faithfulness tests.
 - **Phase 6: [OPTIONAL] Production Hardening & Advanced AI** (`T-118` – `T-123`): Hybrid regulatory ingestion, S3/MinIO cloud object storage, multi-jurisdiction router, local LLM serving, and VLM fine-tuning.
 - **Phase 7: [OPTIONAL] Compound AI / Tabular ML Modeling** (`T-124` – `T-126`): Queue delay and upgrade cost estimation via LightGBM/XGBoost tabular models.
