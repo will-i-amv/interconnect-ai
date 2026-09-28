@@ -17,14 +17,12 @@ from src.agents.state import (
     WorkflowStep,
 )
 from src.schemas.screening import (
-    DeficiencyItem,
     OverallOutcome,
-    ScreenId,
     ScreeningReport,
-    ScreenResult,
     ScreenStatus,
 )
 from src.schemas.tariff import TariffCitation, TariffJurisdiction
+from src.tools.grid_screens import run_deterministic_screens
 
 logger = logging.getLogger(__name__)
 
@@ -176,154 +174,7 @@ def screening_node(state: InterconnectionState) -> dict[str, Any]:
             "requires_human_override": True,
         }
 
-    screen_results: list[ScreenResult] = []
-    deficiencies: list[DeficiencyItem] = []
-
-    # Screen B: Certified Equipment Screen
-    all_certified = all(
-        inv.ul_1741_sb_certified and inv.ieee_1547_2018_compliant for inv in app_data.inverters
-    )
-    if all_certified:
-        screen_results.append(
-            ScreenResult(
-                screen_id=ScreenId.SCREEN_B_CERTIFIED_EQUIPMENT,
-                screen_name="Certified Equipment Screen",
-                status=ScreenStatus.PASS,
-                calculated_value="All inverters UL 1741-SB & IEEE 1547-2018 certified",
-                threshold_value="UL 1741-SB & IEEE 1547-2018",
-                citation="CPUC Rule 21 Section D.1",
-                reasoning="All inverters hold required smart inverter safety certifications.",
-            )
-        )
-    else:
-        screen_results.append(
-            ScreenResult(
-                screen_id=ScreenId.SCREEN_B_CERTIFIED_EQUIPMENT,
-                screen_name="Certified Equipment Screen",
-                status=ScreenStatus.FAIL,
-                calculated_value="Non-certified inverter equipment detected",
-                threshold_value="UL 1741-SB & IEEE 1547-2018",
-                citation="CPUC Rule 21 Section D.1",
-                reasoning=(
-                    "Proposed inverter package lacks UL 1741-SB smart inverter certification."
-                ),
-            )
-        )
-        deficiencies.append(
-            DeficiencyItem(
-                code="DEF_NON_CERTIFIED_EQUIPMENT",
-                title="Non-Certified Inverter Equipment",
-                description=(
-                    "Proposed inverter package lacks UL 1741-SB smart inverter certification."
-                ),
-                violating_screen=ScreenId.SCREEN_B_CERTIFIED_EQUIPMENT,
-                required_cure_action="Replace proposed inverter with a UL 1741-SB certified model.",
-                cure_deadline_business_days=10,
-                tariff_citation="CPUC Rule 21 Section D.1 / E.2",
-            )
-        )
-
-    # Screen D: 15% Penetration Screen
-    feeder = app_data.feeder_telemetry
-    total_der_kw = feeder.existing_connected_generation_kw + app_data.total_export_capacity_kw
-    penetration_pct = (total_der_kw / feeder.annual_peak_load_kw) * 100.0
-
-    if penetration_pct <= 15.0:
-        screen_results.append(
-            ScreenResult(
-                screen_id=ScreenId.SCREEN_D_PENETRATION_15PCT,
-                screen_name="15% Feeder Penetration Screen",
-                status=ScreenStatus.PASS,
-                calculated_value=round(penetration_pct, 2),
-                threshold_value="<= 15.0%",
-                citation="CPUC Rule 21 Section D.2",
-                reasoning=(
-                    f"Aggregate feeder penetration of {penetration_pct:.1f}% is within "
-                    "the 15.0% fast-track threshold."
-                ),
-            )
-        )
-    else:
-        screen_results.append(
-            ScreenResult(
-                screen_id=ScreenId.SCREEN_D_PENETRATION_15PCT,
-                screen_name="15% Feeder Penetration Screen",
-                status=ScreenStatus.FAIL,
-                calculated_value=round(penetration_pct, 2),
-                threshold_value="<= 15.0%",
-                citation="CPUC Rule 21 Section D.2",
-                reasoning=(
-                    f"Aggregate feeder penetration of {penetration_pct:.1f}% exceeds "
-                    "the 15.0% fast-track limit."
-                ),
-            )
-        )
-        deficiencies.append(
-            DeficiencyItem(
-                code="DEF_PENETRATION_EXCEEDED",
-                title="Feeder Penetration Limit Exceeded",
-                description=(
-                    f"Aggregate feeder penetration of {penetration_pct:.1f}% exceeds "
-                    "the 15.0% fast-track limit."
-                ),
-                violating_screen=ScreenId.SCREEN_D_PENETRATION_15PCT,
-                required_cure_action=(
-                    "Application must proceed to Supplemental Review "
-                    "or reduce project export capacity."
-                ),
-                cure_deadline_business_days=10,
-                tariff_citation="CPUC Rule 21 Section D.2 & Section F",
-            )
-        )
-
-    # Screen H: Disconnect Switch Screen
-    has_compliant_disconnect = (
-        app_data.sld_components.has_utility_disconnect_switch
-        and app_data.sld_components.disconnect_switch_visible_break
-        and app_data.sld_components.disconnect_switch_lockable
-    )
-    if has_compliant_disconnect:
-        screen_results.append(
-            ScreenResult(
-                screen_id=ScreenId.SCREEN_H_DISCONNECT_SWITCH,
-                screen_name="Visible AC Disconnect Switch",
-                status=ScreenStatus.PASS,
-                calculated_value="Compliant disconnect present on SLD",
-                threshold_value="Visible, lockable, utility-accessible AC switch",
-                citation="CPUC Rule 21 Section D.4",
-                reasoning="Single-Line Diagram verifies external lockable AC disconnect switch.",
-            )
-        )
-    else:
-        screen_results.append(
-            ScreenResult(
-                screen_id=ScreenId.SCREEN_H_DISCONNECT_SWITCH,
-                screen_name="Visible AC Disconnect Switch",
-                status=ScreenStatus.FAIL,
-                calculated_value="Missing or non-accessible AC disconnect switch",
-                threshold_value="Visible, lockable, utility-accessible AC switch",
-                citation="CPUC Rule 21 Section D.4",
-                reasoning=(
-                    "SLD omits a visible-break, utility-accessible, lockable AC disconnect switch."
-                ),
-            )
-        )
-        deficiencies.append(
-            DeficiencyItem(
-                code="DEF_MISSING_DISCONNECT_SWITCH",
-                title="Missing or Non-Compliant AC Disconnect Switch",
-                description=(
-                    "SLD omits a visible-break, utility-accessible, lockable AC disconnect switch."
-                ),
-                violating_screen=ScreenId.SCREEN_H_DISCONNECT_SWITCH,
-                required_cure_action=(
-                    "Update Single-Line Diagram to depict a lockable, "
-                    "utility-accessible exterior AC disconnect."
-                ),
-                cure_deadline_business_days=10,
-                tariff_citation="CPUC Rule 21 Section D.4 / Safety Standards",
-            )
-        )
+    screen_results, deficiencies = run_deterministic_screens(app_data)
 
     return {
         "current_step": WorkflowStep.DETERMINISTIC_SCREENING,

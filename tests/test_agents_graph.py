@@ -59,15 +59,16 @@ def build_test_application(app_id: str) -> ApplicationSchema:
             if "MISSING-DISCONNECT" in app_id
             else DisconnectSwitchLocation.ADJACENT_TO_METER
         ),
-        main_breaker_rating_a=400.0,
+        main_breaker_rating_a=max(400.0, (entry["capacity_kw"] * 1000 / (480 * 1.732)) * 1.25),
         main_breaker_kaic=65.0,
     )
 
+    tx_rating = max(1000.0, entry["capacity_kw"] * 1.25)
     transformer = TransformerSchema(
-        rating_kva=1000.0,
+        rating_kva=tx_rating,
         primary_voltage_kv=12.47,
         secondary_voltage_v=480.0,
-        impedance_pct_z=5.75,
+        impedance_pct_z=2.5,
     )
 
     return ApplicationSchema(
@@ -141,7 +142,7 @@ def test_pass_application_full_workflow(pass_application: ApplicationSchema) -> 
 
     # Screen evaluations
     screen_results = final_state["screen_results"]
-    assert len(screen_results) == 3
+    assert len(screen_results) == 8
     for screen in screen_results:
         assert screen.status == ScreenStatus.PASS
 
