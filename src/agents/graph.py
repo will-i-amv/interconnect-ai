@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
@@ -16,6 +17,7 @@ from src.agents.state import (
     InterconnectionState,
     WorkflowStep,
 )
+from src.agents.vision_extractor import MultimodalVisionExtractor
 from src.schemas.screening import (
     OverallOutcome,
     ScreeningReport,
@@ -23,6 +25,7 @@ from src.schemas.screening import (
 )
 from src.schemas.tariff import TariffCitation, TariffJurisdiction
 from src.tools.grid_screens import run_deterministic_screens
+from src.utils.dataset import load_application
 
 logger = logging.getLogger(__name__)
 
@@ -64,37 +67,97 @@ def intake_node(state: InterconnectionState) -> dict[str, Any]:
 
 def extraction_node(state: InterconnectionState) -> dict[str, Any]:
     """Validate or extract electrical parameters (Inverter, Transformer, SLD, Telemetry)."""
+    app_id = state.get("application_id", "")
     app_data = state.get("application_data")
-    if app_data is None:
-        return {
-            "current_step": WorkflowStep.EXTRACTION,
-            "errors": ["Extraction failed: No structured application data provided or extracted."],
-            "audit_log": [
-                AuditEntry(
-                    step=WorkflowStep.EXTRACTION,
-                    action=AuditAction.ERROR_RECORDED,
-                    message="Missing application_data container",
-                )
-            ],
-            "requires_human_override": True,
-        }
+    raw_docs = state.get("raw_documents", [])
 
-    return {
-        "current_step": WorkflowStep.EXTRACTION,
-        "audit_log": [
+    extractor = MultimodalVisionExtractor()
+    audit_entries: list[AuditEntry] = []
+
+    # Identify potential SLD or cut-sheet paths in raw_documents or application package
+    sld_path: Path | None = None
+    cutsheet_path: Path | None = None
+
+    for doc in raw_docs:
+        p = Path(doc)
+        doc_lower = p.name.lower()
+        if ("single_line_diagram" in doc_lower or "sld" in doc_lower) and p.is_file():
+            sld_path = p
+        elif ("cutsheet" in doc_lower or "datasheet" in doc_lower) and p.is_file():
+            cutsheet_path = p
+
+    # Fallback to application dataset directory if application_id is known
+    if (not sld_path or not cutsheet_path) and app_id:
+        try:
+            pkg = load_application(app_id)
+            if not sld_path and pkg.get("single_line_diagram_path", Path()).is_file():
+                sld_path = pkg["single_line_diagram_path"]
+            if not cutsheet_path and pkg.get("inverter_cutsheet_path", Path()).is_file():
+                cutsheet_path = pkg["inverter_cutsheet_path"]
+        except Exception:
+            pass
+
+    # If application_data is provided, enrich with multimodal extraction if SLD/cutsheet available
+    if app_data is not None:
+        enriched_app = app_data
+        if sld_path or cutsheet_path:
+            try:
+                enriched_app = extractor.enrich_application(
+                    app_data, sld_path=sld_path, cutsheet_path=cutsheet_path
+                )
+                audit_entries.append(
+                    AuditEntry(
+                        step=WorkflowStep.EXTRACTION,
+                        action=AuditAction.TOOL_INVOCATION,
+                        message="Enriched application parameters via MultimodalVisionExtractor",
+                        details={
+                            "sld_extracted": sld_path is not None,
+                            "cutsheet_extracted": cutsheet_path is not None,
+                            "device": extractor.device,
+                        },
+                    )
+                )
+            except Exception as e:
+                logger.warning("Multimodal enrichment warning: %s", e)
+
+        audit_entries.append(
             AuditEntry(
                 step=WorkflowStep.EXTRACTION,
                 action=AuditAction.STATE_TRANSITION,
                 message=(
-                    f"Verified electrical parameters: {app_data.total_export_capacity_kw} kW "
-                    f"export, {len(app_data.inverters)} inverter(s)"
+                    f"Verified electrical parameters: {enriched_app.total_export_capacity_kw} kW "
+                    f"export, {len(enriched_app.inverters)} inverter(s)"
                 ),
                 details={
-                    "export_kw": app_data.total_export_capacity_kw,
-                    "inverter_count": len(app_data.inverters),
+                    "export_kw": enriched_app.total_export_capacity_kw,
+                    "inverter_count": len(enriched_app.inverters),
+                    "has_disconnect_switch": (
+                        enriched_app.sld_components.has_utility_disconnect_switch
+                        if enriched_app.sld_components
+                        else None
+                    ),
                 },
             )
+        )
+
+        return {
+            "current_step": WorkflowStep.EXTRACTION,
+            "application_data": enriched_app,
+            "audit_log": audit_entries,
+        }
+
+    # If app_data is still None, record extraction error and pause for human override
+    return {
+        "current_step": WorkflowStep.EXTRACTION,
+        "errors": ["Extraction failed: No structured application data provided or extracted."],
+        "audit_log": [
+            AuditEntry(
+                step=WorkflowStep.EXTRACTION,
+                action=AuditAction.ERROR_RECORDED,
+                message="Missing application_data container",
+            )
         ],
+        "requires_human_override": True,
     }
 
 
