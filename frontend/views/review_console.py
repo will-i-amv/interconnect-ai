@@ -8,6 +8,7 @@ from typing import Any
 import streamlit as st
 
 from frontend.api_client import InterconnectApiClient
+from frontend.components.override_dialog import show_override_dialog
 from frontend.components.pdf_viewer import render_pdf_viewer
 from src.agents.letter_generator import export_letter_pdf
 
@@ -89,15 +90,23 @@ def render_review_console(client: InterconnectApiClient, app_id: str) -> None:
     with col_eval:
         st.markdown("### ⚡ Engineering Review Console")
 
-        # Action Bar: Trigger screening run
-        btn_col, status_col = st.columns([3, 4])
-        with btn_col:
+        # Action Bar: Trigger screening run & override dialog
+        btn_col1, btn_col2, status_col = st.columns([3, 3, 4])
+        with btn_col1:
             run_clicked = st.button(
                 "▶️ Run Screening",
                 key=f"console_run_{app_id}",
                 type="primary",
                 use_container_width=True,
             )
+
+        with btn_col2:
+            if st.button(
+                "🛠️ Override / Sign-Off",
+                key=f"console_override_{app_id}",
+                use_container_width=True,
+            ):
+                show_override_dialog(app_id, client)
 
         if run_clicked or f"result_{app_id}" not in st.session_state:
             with st.spinner(f"Evaluating technical screens for {app_id}..."):
@@ -127,6 +136,36 @@ def render_review_console(client: InterconnectApiClient, app_id: str) -> None:
                     f"{outcome} ({time_ms:.0f} ms)</span></div>",
                     unsafe_allow_html=True,
                 )
+
+        # Render PE Sign-Off Banner if present
+        if f"signoff_{app_id}" in st.session_state:
+            so = st.session_state[f"signoff_{app_id}"]
+            eng = so.get("engineer_name")
+            lic = so.get("pe_license_number")
+            dec = so.get("decision")
+            st_utc = str(so.get("timestamp_utc", ""))[:19]
+            rat = so.get("rationale")
+            st.markdown(
+                f"""
+                <div style="background: rgba(16, 185, 129, 0.12);
+                            border: 1px solid rgba(16, 185, 129, 0.4);
+                            border-radius: 8px; padding: 10px 14px;
+                            margin-top: 10px; margin-bottom: 10px;">
+                    <div style="font-weight: 700; color: #34d399; font-size: 0.9rem;">
+                        🔒 Formally Signed Off: {eng} [{lic}]
+                    </div>
+                    <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 2px;">
+                        <strong>Determination:</strong> {dec} &bull;
+                        <strong>Stamped:</strong> {st_utc} UTC
+                    </div>
+                    <div style="font-size: 0.78rem; color: #94a3b8;
+                                margin-top: 4px; font-style: italic;">
+                        "{rat}"
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
         st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
@@ -282,14 +321,19 @@ def _render_audit_log(audit_log: list[dict[str, Any]]) -> None:
         msg = entry.get("message", "")
         ts = entry.get("timestamp_utc", "")
 
+        is_override = action == "OVERRIDE_APPLIED"
+        border_color = "#f59e0b" if is_override else "#38bdf8"
+        bg_color = "rgba(245, 158, 11, 0.12)" if is_override else "rgba(15, 23, 42, 0.4)"
+        action_label = f"🛠️ {action}" if is_override else str(action)
+
         st.markdown(
             f"""
-            <div style="padding: 8px 12px; border-left: 3px solid #38bdf8;
-                        background: rgba(15, 23, 42, 0.4);
+            <div style="padding: 8px 12px; border-left: 3px solid {border_color};
+                        background: {bg_color};
                         margin-bottom: 8px; border-radius: 0 6px 6px 0;">
                 <div style="display: flex; justify-content: space-between;
                             font-size: 0.75rem; color: #94a3b8;">
-                    <span><strong>[{step}]</strong> {action}</span>
+                    <span><strong>[{step}]</strong> {action_label}</span>
                     <span>{ts}</span>
                 </div>
                 <div style="font-size: 0.85rem; color: #f1f5f9; margin-top: 4px;">

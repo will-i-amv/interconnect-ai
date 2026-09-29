@@ -135,12 +135,19 @@ class InterconnectApiClient:
 
         # Fallback to direct state machine invocation
         from src.agents.graph import create_interconnection_graph
+        from src.schemas.application import ApplicationSchema
+
+        if custom_schema is not None:
+            if isinstance(custom_schema, ApplicationSchema):
+                app_data = custom_schema
+            else:
+                app_data = ApplicationSchema.model_validate(custom_schema)
+        else:
+            app_data = load_application_schema(application_id)
 
         initial_state = {
             "application_id": application_id,
-            "application_data": (
-                load_application_schema(application_id) if custom_schema is None else None
-            ),
+            "application_data": app_data,
         }
         graph = create_interconnection_graph()
         thread_cfg = {"configurable": {"thread_id": f"st-{application_id}"}}
