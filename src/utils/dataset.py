@@ -6,6 +6,16 @@ import json
 from pathlib import Path
 from typing import Any
 
+from src.schemas.application import (
+    ApplicationSchema,
+    DisconnectSwitchLocation,
+    FeederTelemetrySchema,
+    InterconnectionType,
+    InverterSchema,
+    SLDComponentSchema,
+    TransformerSchema,
+)
+
 
 def get_dataset_root() -> Path:
     """Return the absolute path to the dataset root directory."""
@@ -78,3 +88,79 @@ def get_tariff_path(filename: str) -> Path:
     if not path.is_file():
         raise FileNotFoundError(f"Tariff document not found: {path}")
     return path
+
+
+def load_application_schema(application_id: str) -> ApplicationSchema:
+    """Construct a validated ApplicationSchema from benchmark catalog and telemetry.
+
+    Args:
+        application_id: Benchmark application identifier.
+
+    Returns:
+        Structured and validated ApplicationSchema instance.
+    """
+    catalog = load_dataset_catalog()
+    apps = catalog.get("applications", {})
+    if application_id not in apps:
+        available = ", ".join(apps.keys())
+        raise KeyError(f"Application '{application_id}' not found. Available: {available}")
+
+    entry = apps[application_id]
+    pkg = load_application(application_id)
+    telemetry_raw = pkg["telemetry"]
+
+    inv = InverterSchema(
+        manufacturer="SMA Solar",
+        model_name="Sunny Tripower",
+        rated_ac_power_kw=entry["capacity_kw"],
+        nominal_voltage_v=480.0,
+        max_continuous_current_a=entry["capacity_kw"] * 1000 / (480 * 1.732),
+        ul_1741_sb_certified="FAIL-NONCERTIFIED" not in application_id,
+        ieee_1547_2018_compliant="FAIL-NONCERTIFIED" not in application_id,
+        count=1,
+    )
+
+    telemetry = FeederTelemetrySchema(
+        feeder_id=entry.get("feeder_id", "FEEDER-01"),
+        utility=entry["utility"],
+        nominal_voltage_kv=telemetry_raw.get("distribution_voltage_kv", 12.47),
+        annual_peak_load_kw=telemetry_raw.get("feeder_peak_load_kw", 5000.0),
+        minimum_daytime_load_kw=telemetry_raw.get("daytime_min_load_kw", 2000.0),
+        existing_connected_generation_kw=telemetry_raw.get("existing_der_kw", 200.0),
+    )
+
+    sld = SLDComponentSchema(
+        has_utility_disconnect_switch="MISSING-DISCONNECT" not in application_id,
+        disconnect_switch_visible_break="MISSING-DISCONNECT" not in application_id,
+        disconnect_switch_lockable="MISSING-DISCONNECT" not in application_id,
+        disconnect_switch_location=(
+            DisconnectSwitchLocation.NOT_DEPICTED
+            if "MISSING-DISCONNECT" in application_id
+            else DisconnectSwitchLocation.ADJACENT_TO_METER
+        ),
+        main_breaker_rating_a=max(400.0, (entry["capacity_kw"] * 1000 / (480 * 1.732)) * 1.25),
+        main_breaker_kaic=65.0,
+    )
+
+    tx_rating = max(1000.0, entry["capacity_kw"] * 1.25)
+    transformer = TransformerSchema(
+        rating_kva=tx_rating,
+        primary_voltage_kv=12.47,
+        secondary_voltage_v=480.0,
+        impedance_pct_z=2.5,
+    )
+
+    return ApplicationSchema(
+        application_id=application_id,
+        applicant_name=entry["applicant_name"],
+        site_address="123 Solar Way",
+        utility_provider=entry["utility"],
+        utility_account_number="ACCT-98765",
+        project_type=InterconnectionType.SOLAR_PV,
+        total_export_capacity_kw=entry["capacity_kw"],
+        service_voltage="480V 3-Phase",
+        inverters=[inv],
+        transformer=transformer,
+        sld_components=sld,
+        feeder_telemetry=telemetry,
+    )
