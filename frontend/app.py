@@ -7,6 +7,7 @@ import streamlit as st
 from frontend.api_client import InterconnectApiClient
 from frontend.styles import inject_custom_css
 from frontend.views.dashboard import render_dashboard
+from frontend.views.review_console import render_review_console
 
 # Set Streamlit Page Configuration
 st.set_page_config(
@@ -113,35 +114,4 @@ if st.session_state["current_page"] == "dashboard":
     render_dashboard(client)
 elif st.session_state["current_page"] == "review_console":
     app_id = st.session_state.get("selected_application_id", "APP-001-PASS-ROOFTOP-SOLAR")
-    st.markdown(
-        f"""
-        <div class="header-banner">
-            <div class="header-title">🔍 Split-Screen Review Console: {app_id}</div>
-            <div class="header-desc">
-                Side-by-side engineering evaluation console with multi-page vector PDF inspection
-                and real-time LangGraph state machine execution reasoning.
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    col_back, col_status = st.columns([2, 8])
-    with col_back:
-        if st.button("⬅️ Return to Queue Dashboard"):
-            st.session_state["current_page"] = "dashboard"
-            st.rerun()
-
-    st.info(
-        f"Selected Application: **{app_id}**. The full split-screen console with "
-        "embedded PDF viewer and live LangGraph SSE reasoning log will be fully "
-        "wired in **Ticket T-113**."
-    )
-
-    # Allow running screening directly here as well
-    if st.button("▶️ Execute Full Technical Screening Now", type="primary"):
-        with st.spinner("Executing screening state machine..."):
-            result = client.run_screening(app_id)
-            st.markdown(f"### Screening Determination: `{result.get('overall_outcome')}`")
-            if result.get("formal_letter_markdown"):
-                st.markdown(result["formal_letter_markdown"])
+    render_review_console(client, app_id)
