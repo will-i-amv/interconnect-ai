@@ -197,9 +197,9 @@ The engineering scope encompasses **Phases 1 through 5 (Core Architecture - 100%
   - FastAPI async runner with SSE streaming, Streamlit master dashboard, split-screen review console, and human-in-the-loop PE override modal.
 - [x] **Phase 5: Automated Evals & Observability** (`T-115` – `T-117`)
   - Langfuse/Phoenix distributed tracing, 25-application Golden Dataset, and DeepEval regulatory citation faithfulness evaluation harness.
-- [ ] **Phase 6: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion** (`T-118` – `T-123`)
-  - Hybrid regulatory fetcher with caching, S3/MinIO cloud object storage, multi-jurisdiction tariff router, local LLM serving (vLLM/Ollama), and SLD LoRA fine-tuning.
-- [ ] **Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling** (`T-124` – `T-126`)
+- [ ] **Phase 6: [OPTIONAL ADD-ON] Production Hardening & Live Ingestion** (`T-118` – `T-124`)
+  - Hybrid regulatory fetcher with caching, S3/MinIO cloud object storage, multi-jurisdiction tariff router, local LLM serving (vLLM/Ollama), SLD LoRA fine-tuning, and PostgreSQL persistent state checkpointing (`AsyncPostgresSaver`).
+- [ ] **Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling** (`T-125` – `T-127`)
   - Historical queue ingestion, LightGBM/XGBoost training for study completion delay and upgrade costs.
 
 ---

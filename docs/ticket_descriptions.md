@@ -10,8 +10,8 @@ Phase 2: Hybrid RAG & Knowledge Retrieval (T-104 - T-106)
 Phase 3: Agentic Screening State Machine (T-107 - T-110)
 Phase 4: Full-Stack Serving & Streamlit UI (T-111 - T-114)
 Phase 5: Automated Evals & Observability (T-115 - T-117)
-Phase 6: [OPTIONAL ADD-ON] Production Hardening & Advanced AI (T-118 - T-123)
-Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-124 - T-126)
+Phase 6: [OPTIONAL ADD-ON] Production Hardening & Live Utility Ingestion (T-118 - T-124)
+Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-125 - T-127)
 ```
 
 ---
@@ -82,6 +82,7 @@ Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-124 - T-126)
 | `T-121` | `LOCAL-LLM` | Self-Hosted Open-Source LLM Serving: Air-gapped vLLM / Ollama engine running open-weight models (Llama 3.3 / Qwen 2.5) for NERC-CIP utility data sovereignty | `docker-compose.local-llm.yml`, local model provider switch in `src/agents/` |
 | `T-122` | `GPU-OPT` | Hardware-Accelerated Inference & Reranking: CUDA/TensorRT and ONNX Runtime optimization for BGE-Reranker and local embeddings | `src/rag/accelerators.py`, GPU latency benchmark report |
 | `T-123` | `FINE-TUNE` | Vision-Language Model (VLM) Fine-Tuning: LoRA/QLoRA fine-tuning of open VLM (Qwen2.5-VL) on electrical Single-Line Diagrams for structured Pydantic extraction | `notebooks/02_vlm_lora_finetune.ipynb`, LoRA adapters in `models/sld_lora/` |
+| `T-124` | `POSTGRES` | Production PostgreSQL Application State & LangGraph Checkpointing: Multi-worker async state persistence using `langgraph-checkpoint-postgres` (`AsyncPostgresSaver`), connection pooling, and historical application queue storage | `src/storage/db.py`, `docker-compose.yml` (Postgres service), LangGraph checkpointer integration, unit tests in `tests/test_storage_db.py` |
 
 ---
 
@@ -92,6 +93,6 @@ Phase 7: [OPTIONAL ADD-ON] Compound AI / Tabular ML Modeling (T-124 - T-126)
 
 | Ticket | Category | Description | Deliverables |
 |---|---|---|---|
-| `T-124` | `ML-DATA` | Ingest historical interconnection queue dataset (e.g., LBNL Queued Up dataset) and engineer features | `notebooks/01_queue_eda.ipynb`, `src/ml/feature_pipeline.py` |
-| `T-125` | `ML-MODEL` | Train & tune LightGBM/XGBoost regressor to predict **Study Completion Delay (days)** & **Upgrade Cost ($)** | `src/ml/train.py`, `models/queue_delay_model.joblib`, model comparison report |
-| `T-126` | `COMPOUND`| Expose trained ML model as an internal LangGraph tool (`predict_queue_delay_risk`) | Tool integration in `src/tools/ml_forecaster.py`, UI risk score badge |
+| `T-125` | `ML-DATA` | Ingest historical interconnection queue dataset (e.g., LBNL Queued Up dataset) and engineer features | `notebooks/01_queue_eda.ipynb`, `src/ml/feature_pipeline.py` |
+| `T-126` | `ML-MODEL` | Train & tune LightGBM/XGBoost regressor to predict **Study Completion Delay (days)** & **Upgrade Cost ($)** | `src/ml/train.py`, `models/queue_delay_model.joblib`, model comparison report |
+| `T-127` | `COMPOUND`| Expose trained ML model as an internal LangGraph tool (`predict_queue_delay_risk`) | Tool integration in `src/tools/ml_forecaster.py`, UI risk score badge |
