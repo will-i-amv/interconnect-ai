@@ -1,0 +1,1811 @@
+{
+  "version": "1.0.0",
+  "description": "Golden evaluation benchmark of 25 synthetic interconnection applications (15 clean Fast Track passes, 10 known regulatory deficiencies) for Rule 21 and IEEE 1547-2018.",
+  "total_count": 25,
+  "pass_count": 15,
+  "fail_count": 10,
+  "applications": [
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "application_name": "Sunset Cluster Community Solar",
+      "application_data": {
+        "application_id": "GOLD-001-PASS-RES-SOLAR",
+        "applicant_name": "Residential Solar Co-Op LLC",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT--SOLAR",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 75.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 75.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 90.21,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 93.8,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-PGNE-01",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 3000.0,
+          "minimum_daytime_load_kw": 1200.0,
+          "existing_connected_generation_kw": 100.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 50.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 5.8% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-002-PASS-COMM-ROOFTOP",
+      "application_name": "Valley Logistics Commercial Rooftop",
+      "application_data": {
+        "application_id": "GOLD-002-PASS-COMM-ROOFTOP",
+        "applicant_name": "SunTech Logistics LLC",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-OOFTOP",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 250.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 250.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 300.71,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 312.5,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-PGNE-02",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 4000.0,
+          "minimum_daytime_load_kw": 1800.0,
+          "existing_connected_generation_kw": 200.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 60.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 11.2% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-003-PASS-RETAIL-CANOPY",
+      "application_name": "South Coast Retail Center Solar Canopy",
+      "application_data": {
+        "application_id": "GOLD-003-PASS-RETAIL-CANOPY",
+        "applicant_name": "Coastal Retail Ventures",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-CANOPY",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 450.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 450.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 541.28,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 562.5,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SCE-03",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 6000.0,
+          "minimum_daytime_load_kw": 2500.0,
+          "existing_connected_generation_kw": 400.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 75.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 14.2% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-004-PASS-UNIV-CAMPUS",
+      "application_name": "Foothill College Green Campus Array",
+      "application_data": {
+        "application_id": "GOLD-004-PASS-UNIV-CAMPUS",
+        "applicant_name": "Foothill Education Trust",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-CAMPUS",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 600.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 600.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 721.71,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 750.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SCE-04",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 8000.0,
+          "minimum_daytime_load_kw": 3200.0,
+          "existing_connected_generation_kw": 500.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 80.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 13.8% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-005-PASS-HOSPITAL-HYBRID",
+      "application_name": "Mercy General Emergency Microgrid",
+      "application_data": {
+        "application_id": "GOLD-005-PASS-HOSPITAL-HYBRID",
+        "applicant_name": "Mercy Health Network",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "San Diego Gas & Electric (SDG&E)",
+        "utility_account_number": "ACCT-HYBRID",
+        "project_type": "HYBRID_SOLAR_STORAGE",
+        "total_export_capacity_kw": 500.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 500.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 601.42,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 625.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SDGE-05",
+          "utility": "San Diego Gas & Electric (SDG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 7000.0,
+          "minimum_daytime_load_kw": 2800.0,
+          "existing_connected_generation_kw": 300.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 70.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 11.4% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-006-PASS-COLD-STORAGE",
+      "application_name": "Sierra Frozen Foods Distribution Solar",
+      "application_data": {
+        "application_id": "GOLD-006-PASS-COLD-STORAGE",
+        "applicant_name": "Sierra Ag Enterprises",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-TORAGE",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 350.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 350.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 421.0,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 437.5,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-PGNE-06",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 5000.0,
+          "minimum_daytime_load_kw": 2100.0,
+          "existing_connected_generation_kw": 250.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 65.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 12.0% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-007-PASS-WATER-TREATMENT",
+      "application_name": "Bay Municipal Water Recovery Solar",
+      "application_data": {
+        "application_id": "GOLD-007-PASS-WATER-TREATMENT",
+        "applicant_name": "City Public Utilities District",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-ATMENT",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 800.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 800.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 962.28,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1000.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-PGNE-07",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 9000.0,
+          "minimum_daytime_load_kw": 3600.0,
+          "existing_connected_generation_kw": 450.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 90.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 13.9% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-008-PASS-AGRI-WINERY",
+      "application_name": "Napa Valley Estate Winery Solar",
+      "application_data": {
+        "application_id": "GOLD-008-PASS-AGRI-WINERY",
+        "applicant_name": "Napa Terroir Holdings",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-WINERY",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 180.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 180.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 216.51,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 225.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SCE-08",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 3500.0,
+          "minimum_daytime_load_kw": 1400.0,
+          "existing_connected_generation_kw": 150.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 55.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 9.4% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-009-PASS-OFFICE-PARK",
+      "application_name": "Mission Valley Corporate Center Array",
+      "application_data": {
+        "application_id": "GOLD-009-PASS-OFFICE-PARK",
+        "applicant_name": "Mission Real Estate Group",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "San Diego Gas & Electric (SDG&E)",
+        "utility_account_number": "ACCT-E-PARK",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 400.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 400.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 481.14,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 500.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SDGE-09",
+          "utility": "San Diego Gas & Electric (SDG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 5500.0,
+          "minimum_daytime_load_kw": 2200.0,
+          "existing_connected_generation_kw": 300.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 70.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 12.7% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-010-PASS-INDUSTRIAL-MICROGRID",
+      "application_name": "Pacific Precision Steel Microgrid",
+      "application_data": {
+        "application_id": "GOLD-010-PASS-INDUSTRIAL-MICROGRID",
+        "applicant_name": "Pacific Metals Corp",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-ROGRID",
+        "project_type": "HYBRID_SOLAR_STORAGE",
+        "total_export_capacity_kw": 1000.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 1000.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1202.85,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1250.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SCE-10",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 12000.0,
+          "minimum_daytime_load_kw": 5000.0,
+          "existing_connected_generation_kw": 700.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 120.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 14.2% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-011-PASS-BESS-COMMERCIAL",
+      "application_name": "Silverado Standalone Storage BESS",
+      "application_data": {
+        "application_id": "GOLD-011-PASS-BESS-COMMERCIAL",
+        "applicant_name": "GridFlex Energy Storage",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-ERCIAL",
+        "project_type": "BATTERY_STORAGE",
+        "total_export_capacity_kw": 500.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 500.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 601.42,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 625.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-PGNE-11",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 6500.0,
+          "minimum_daytime_load_kw": 2600.0,
+          "existing_connected_generation_kw": 350.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 80.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 13.1% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-012-PASS-TRANSIT-DEPOT",
+      "application_name": "Metro Transit Clean Bus Fleet Depot",
+      "application_data": {
+        "application_id": "GOLD-012-PASS-TRANSIT-DEPOT",
+        "applicant_name": "Metropolitan Transit Authority",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "San Diego Gas & Electric (SDG&E)",
+        "utility_account_number": "ACCT--DEPOT",
+        "project_type": "EV_CHARGING",
+        "total_export_capacity_kw": 750.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 750.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 902.14,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 937.5,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SDGE-12",
+          "utility": "San Diego Gas & Electric (SDG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 9500.0,
+          "minimum_daytime_load_kw": 3800.0,
+          "existing_connected_generation_kw": 500.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 95.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 13.2% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-013-PASS-SCHOOL-DISTRICT",
+      "application_name": "San Joaquin Unified STEM Campus Solar",
+      "application_data": {
+        "application_id": "GOLD-013-PASS-SCHOOL-DISTRICT",
+        "applicant_name": "County Unified School District",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-STRICT",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 300.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 300.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 360.85,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 375.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-PGNE-13",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 4500.0,
+          "minimum_daytime_load_kw": 1800.0,
+          "existing_connected_generation_kw": 200.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 60.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 11.1% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-014-PASS-LOGISTICS-AIRPORT",
+      "application_name": "Inland Empire Cargo Hub Solar",
+      "application_data": {
+        "application_id": "GOLD-014-PASS-LOGISTICS-AIRPORT",
+        "applicant_name": "TransPacific Air Freight Logistics",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-IRPORT",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 1500.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 1500.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1804.27,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1875.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SCE-14",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 16000.0,
+          "minimum_daytime_load_kw": 6500.0,
+          "existing_connected_generation_kw": 800.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 150.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 14.4% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-015-PASS-RURAL-COMMUNITY",
+      "application_name": "Highland Valley Rural Microgrid",
+      "application_data": {
+        "application_id": "GOLD-015-PASS-RURAL-COMMUNITY",
+        "applicant_name": "Highland Community Mutual",
+        "site_address": "100 Clean Energy Way, Industrial District, CA 94105",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-MUNITY",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 120.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 120.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 144.34,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 150.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SCE-15",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 3000.0,
+          "minimum_daytime_load_kw": 1200.0,
+          "existing_connected_generation_kw": 100.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 50.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "FAST_TRACK_APPROVED",
+        "failing_screens": [],
+        "expected_deficiency_codes": [],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A",
+          "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+          "CPUC Rule 21 Section D Screen C & IEEE 1453",
+          "CPUC Rule 21 Section D.2",
+          "CPUC Rule 21 Section D Screen E",
+          "CPUC Rule 21 Section D Screen F",
+          "CPUC Rule 21 Section D.4",
+          "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1"
+        ],
+        "evaluation_notes": "Full clean pass across all 8 technical screens. Feeder penetration is 7.3% (<= 15.0%). Inverters are UL 1741-SB certified, disconnect switch is compliant, and SCR is adequate."
+      }
+    },
+    {
+      "application_id": "GOLD-016-FAIL-PENETRATION-MODERATE",
+      "application_name": "Kern Valley Agricultural Solar Farm",
+      "application_data": {
+        "application_id": "GOLD-016-FAIL-PENETRATION-MODERATE",
+        "applicant_name": "Kern Agripower Solar LLC",
+        "site_address": "4500 Orchard Highway, Bakersfield, CA 93301",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-SCE-9812",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 1200.0,
+        "service_voltage": "12.47KV_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 1200.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1443.42,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1500.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-KERN-02",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 4500.0,
+          "minimum_daytime_load_kw": 1800.0,
+          "existing_connected_generation_kw": 500.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 100.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_D_PENETRATION_15PCT"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_PENETRATION_EXCEEDED"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.2 & Section F"
+        ],
+        "evaluation_notes": "Penetration is (1200 + 500) / 4500 = 37.78% > 15.0%. Requires Supplemental Review."
+      }
+    },
+    {
+      "application_id": "GOLD-017-FAIL-NONCERTIFIED-INVERTER",
+      "application_name": "Redwood Timber Mill Solar Project",
+      "application_data": {
+        "application_id": "GOLD-017-FAIL-NONCERTIFIED-INVERTER",
+        "applicant_name": "Redwood Timber Works Inc",
+        "site_address": "888 Mill Creek Road, Eureka, CA 95501",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-PGNE-4321",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 500.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "Vintage Power",
+            "model_name": "VP-500-Legacy",
+            "rated_ac_power_kw": 500.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 601.42,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": false,
+            "ieee_1547_2018_compliant": false,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": false,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 625.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-EUREKA-04",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 6000.0,
+          "minimum_daytime_load_kw": 2400.0,
+          "existing_connected_generation_kw": 200.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 80.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_B_CERTIFIED_EQUIPMENT"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_NON_CERTIFIED_EQUIPMENT"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.1 & Section E.2",
+          "IEEE 1547-2018"
+        ],
+        "evaluation_notes": "Proposed inverter lacks UL 1741-SB and IEEE 1547-2018 smart inverter certifications."
+      }
+    },
+    {
+      "application_id": "GOLD-018-FAIL-MISSING-DISCONNECT",
+      "application_name": "Coronado Coastal BESS Facility",
+      "application_data": {
+        "application_id": "GOLD-018-FAIL-MISSING-DISCONNECT",
+        "applicant_name": "Pacific Coast Storage Partners",
+        "site_address": "1200 Bayside Parkway, Coronado, CA 92118",
+        "utility_provider": "San Diego Gas & Electric (SDG&E)",
+        "utility_account_number": "ACCT-SDGE-7788",
+        "project_type": "BATTERY_STORAGE",
+        "total_export_capacity_kw": 750.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 750.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 902.14,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 937.5,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": false,
+          "disconnect_switch_visible_break": false,
+          "disconnect_switch_lockable": false,
+          "disconnect_switch_location": "NOT_DEPICTED",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-CORONADO-21",
+          "utility": "San Diego Gas & Electric (SDG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 8000.0,
+          "minimum_daytime_load_kw": 3500.0,
+          "existing_connected_generation_kw": 400.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 90.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_H_DISCONNECT_SWITCH"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_MISSING_DISCONNECT_SWITCH"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.4 / Safety Standards"
+        ],
+        "evaluation_notes": "Single-Line Diagram omits mandatory utility-accessible visible AC disconnect switch."
+      }
+    },
+    {
+      "application_id": "GOLD-019-FAIL-VOLTAGE-DROP",
+      "application_name": "Coachella Desert Agrivoltaic Array",
+      "application_data": {
+        "application_id": "GOLD-019-FAIL-VOLTAGE-DROP",
+        "applicant_name": "Desert Sun Agrivoltaics LLC",
+        "site_address": "7700 Coachella Canal Road, Indio, CA 92201",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-SCE-5511",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 400.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 400.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 481.14,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 300.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 3.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-INDIO-08",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 6500.0,
+          "minimum_daytime_load_kw": 2800.0,
+          "existing_connected_generation_kw": 300.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 85.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_C_VOLTAGE_DROP"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_VOLTAGE_DROP_EXCEEDED"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D Screen C & IEEE 1453"
+        ],
+        "evaluation_notes": "Calculated rapid voltage change of 4.67% exceeds the 3.0% threshold at the PCC."
+      }
+    },
+    {
+      "application_id": "GOLD-020-FAIL-SHORT-CIRCUIT-RATIO",
+      "application_name": "Sonora Mountain Solar Park",
+      "application_data": {
+        "application_id": "GOLD-020-FAIL-SHORT-CIRCUIT-RATIO",
+        "applicant_name": "Sierra Foothills Solar Co",
+        "site_address": "1234 Ridge Highway, Sonora, CA 95370",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-PGNE-1122",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 1000.0,
+        "service_voltage": "12.47KV_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 1000.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1202.85,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1250.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SONORA-03",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 9000.0,
+          "minimum_daytime_load_kw": 3500.0,
+          "existing_connected_generation_kw": 250.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 14.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_F_SHORT_CIRCUIT_RATIO"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_SHORT_CIRCUIT_RATIO_LOW"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D Screen F"
+        ],
+        "evaluation_notes": "Short-circuit ratio of 14.0 is below the 20.0 stiff-grid threshold, indicating a weak PCC."
+      }
+    },
+    {
+      "application_id": "GOLD-021-FAIL-PENETRATION-EXTREME",
+      "application_name": "Salton Basin Utility Scale Solar",
+      "application_data": {
+        "application_id": "GOLD-021-FAIL-PENETRATION-EXTREME",
+        "applicant_name": "Imperial Solar Power LLC",
+        "site_address": "9900 Salton Highway, Brawley, CA 92227",
+        "utility_provider": "San Diego Gas & Electric (SDG&E)",
+        "utility_account_number": "ACCT-SDGE-3344",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 2500.0,
+        "service_voltage": "12.47KV_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 1250.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1503.56,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 2
+          }
+        ],
+        "transformer": {
+          "rating_kva": 3125.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-BRAWLEY-12",
+          "utility": "San Diego Gas & Electric (SDG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 7000.0,
+          "minimum_daytime_load_kw": 2500.0,
+          "existing_connected_generation_kw": 1800.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 150.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_D_PENETRATION_15PCT"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_PENETRATION_EXCEEDED"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.2 & Section F"
+        ],
+        "evaluation_notes": "Extreme penetration of 61.43% severely violates the 15.0% threshold and exceeds daytime min load."
+      }
+    },
+    {
+      "application_id": "GOLD-022-FAIL-NONLOCKABLE-DISCONNECT",
+      "application_name": "Mission Bay Life Sciences Solar",
+      "application_data": {
+        "application_id": "GOLD-022-FAIL-NONLOCKABLE-DISCONNECT",
+        "applicant_name": "Bayview Biotech Research",
+        "site_address": "500 Mission Bay Blvd, San Francisco, CA 94158",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-PGNE-6677",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 300.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 300.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 360.85,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 375.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": false,
+          "disconnect_switch_location": "EXTERIOR_NOT_ADJACENT",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SF-09",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 5000.0,
+          "minimum_daytime_load_kw": 2000.0,
+          "existing_connected_generation_kw": 200.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 75.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_H_DISCONNECT_SWITCH"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_MISSING_DISCONNECT_SWITCH"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.4 / Safety Standards"
+        ],
+        "evaluation_notes": "Disconnect switch lacks required padlock provision and is not installed adjacent to meter."
+      }
+    },
+    {
+      "application_id": "GOLD-023-FAIL-CAPACITY-EXCEEDED",
+      "application_name": "Barstow Commercial Utility PV Farm",
+      "application_data": {
+        "application_id": "GOLD-023-FAIL-CAPACITY-EXCEEDED",
+        "applicant_name": "Mojave Desert Solar One",
+        "site_address": "15000 Mojave Freeway, Barstow, CA 92311",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-SCE-8899",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 4000.0,
+        "service_voltage": "12.47KV_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 1000.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1202.85,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 4
+          }
+        ],
+        "transformer": {
+          "rating_kva": 5000.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-BARSTOW-01",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 35000.0,
+          "minimum_daytime_load_kw": 15000.0,
+          "existing_connected_generation_kw": 1000.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 200.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_A_APPLICABILITY"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_FAST_TRACK_CAPACITY_EXCEEDED"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section C.1 & Section D Screen A"
+        ],
+        "evaluation_notes": "Proposed export of 4,000 kW exceeds the 3,000 kW maximum eligibility limit for Fast Track."
+      }
+    },
+    {
+      "application_id": "GOLD-024-FAIL-COMPOUND-PEN-AND-DISCONNECT",
+      "application_name": "Chino Valley Agricultural DER Array",
+      "application_data": {
+        "application_id": "GOLD-024-FAIL-COMPOUND-PEN-AND-DISCONNECT",
+        "applicant_name": "Chino Dairy Renewable Energy",
+        "site_address": "3200 Dairy Road, Chino, CA 91710",
+        "utility_provider": "Southern California Edison (SCE)",
+        "utility_account_number": "ACCT-SCE-9900",
+        "project_type": "SOLAR_PV",
+        "total_export_capacity_kw": 900.0,
+        "service_voltage": "480V_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "SMA Solar",
+            "model_name": "Sunny Tripower Core1",
+            "rated_ac_power_kw": 900.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1082.56,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": true,
+            "ieee_1547_2018_compliant": true,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": true,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1125.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": false,
+          "disconnect_switch_visible_break": false,
+          "disconnect_switch_lockable": false,
+          "disconnect_switch_location": "NOT_DEPICTED",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-CHINO-05",
+          "utility": "Southern California Edison (SCE)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 4000.0,
+          "minimum_daytime_load_kw": 1600.0,
+          "existing_connected_generation_kw": 400.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 60.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_D_PENETRATION_15PCT",
+          "SCREEN_H_DISCONNECT_SWITCH"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_PENETRATION_EXCEEDED",
+          "DEF_MISSING_DISCONNECT_SWITCH"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.2 & Section F",
+          "CPUC Rule 21 Section D.4 / Safety Standards"
+        ],
+        "evaluation_notes": "Compound failure: feeder penetration is 32.5% (> 15.0%) and SLD omits mandatory AC disconnect switch."
+      }
+    },
+    {
+      "application_id": "GOLD-025-FAIL-COMPOUND-INVERTER-AND-SCR",
+      "application_name": "Salinas Produce Distribution Microgrid",
+      "application_data": {
+        "application_id": "GOLD-025-FAIL-COMPOUND-INVERTER-AND-SCR",
+        "applicant_name": "Salinas Cold Storage Microgrid",
+        "site_address": "600 Industrial Way, Salinas, CA 93901",
+        "utility_provider": "Pacific Gas & Electric (PG&E)",
+        "utility_account_number": "ACCT-PGNE-7711",
+        "project_type": "HYBRID_SOLAR_STORAGE",
+        "total_export_capacity_kw": 1500.0,
+        "service_voltage": "12.47KV_3PHASE",
+        "inverters": [
+          {
+            "manufacturer": "NonCompliant Corp",
+            "model_name": "NC-1500-Old",
+            "rated_ac_power_kw": 1500.0,
+            "nominal_voltage_v": 480.0,
+            "max_continuous_current_a": 1804.27,
+            "power_factor_min": -0.85,
+            "power_factor_max": 0.85,
+            "ul_1741_sb_certified": false,
+            "ieee_1547_2018_compliant": false,
+            "anti_islanding_trip_time_s": 2.0,
+            "cec_listed": false,
+            "count": 1
+          }
+        ],
+        "transformer": {
+          "rating_kva": 1875.0,
+          "primary_voltage_kv": 12.47,
+          "secondary_voltage_v": 480.0,
+          "impedance_pct_z": 2.5,
+          "winding_configuration": "DELTA_WYE_GROUNDED"
+        },
+        "sld_components": {
+          "has_utility_disconnect_switch": true,
+          "disconnect_switch_visible_break": true,
+          "disconnect_switch_lockable": true,
+          "disconnect_switch_location": "ADJACENT_TO_METER",
+          "main_breaker_rating_a": 800.0,
+          "main_breaker_kaic": 42.0,
+          "revenue_meter_depicted": true,
+          "grounding_electrode_system_depicted": true
+        },
+        "feeder_telemetry": {
+          "feeder_id": "FEEDER-SALINAS-02",
+          "utility": "Pacific Gas & Electric (PG&E)",
+          "nominal_voltage_kv": 12.47,
+          "annual_peak_load_kw": 15000.0,
+          "minimum_daytime_load_kw": 6000.0,
+          "existing_connected_generation_kw": 300.0,
+          "substation_transformer_rating_kva": null,
+          "available_fault_duty_mva": 15.0
+        }
+      },
+      "ground_truth": {
+        "expected_overall_outcome": "DEFICIENCY_ISSUED",
+        "failing_screens": [
+          "SCREEN_B_CERTIFIED_EQUIPMENT",
+          "SCREEN_F_SHORT_CIRCUIT_RATIO"
+        ],
+        "expected_deficiency_codes": [
+          "DEF_NON_CERTIFIED_EQUIPMENT",
+          "DEF_SHORT_CIRCUIT_RATIO_LOW"
+        ],
+        "required_citations": [
+          "CPUC Rule 21 Section D.1 & Section E.2",
+          "CPUC Rule 21 Section D Screen F"
+        ],
+        "evaluation_notes": "Compound failure: inverters lack UL 1741-SB certification and PCC short-circuit ratio is 10.0 (< 20.0)."
+      }
+    }
+  ]
+}
