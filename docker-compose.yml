@@ -1,4 +1,7 @@
 services:
+  # ---------------------------------------------------------------------------
+  # Vector Database: Qdrant
+  # ---------------------------------------------------------------------------
   qdrant:
     image: qdrant/qdrant:v1.19.1
     container_name: interconnect-qdrant
@@ -16,6 +19,78 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+
+  # ---------------------------------------------------------------------------
+  # Backend: FastAPI Async Runner & Screening Pipeline
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      target: backend
+    container_name: interconnect-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+      - DEEPEVAL_TELEMETRY_OPT_OUT=YES
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
+      - ENVIRONMENT=production
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Frontend: Streamlit Review Console
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      target: frontend
+    container_name: interconnect-frontend
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - INTERCONNECT_API_URL=http://backend:8000
+      - DEEPEVAL_TELEMETRY_OPT_OUT=YES
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Evals Profile: DeepEval Benchmark Suite & CI/CD Gate
+  # Usage: docker compose run --rm evals
+  # ---------------------------------------------------------------------------
+  evals:
+    build:
+      context: .
+      target: evals
+    container_name: interconnect-evals
+    profiles:
+      - evals
+    environment:
+      - QDRANT_URL=http://qdrant:6333
+      - DEEPEVAL_TELEMETRY_OPT_OUT=YES
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    depends_on:
+      qdrant:
+        condition: service_healthy
 
 volumes:
   qdrant_data:

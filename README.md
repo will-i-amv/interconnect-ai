@@ -159,7 +159,9 @@ interconnect-ai/
 │   ├── applications/                # Benchmark application exhibits (PDFs + JSON)
 │   └── tariffs/                     # Authoritative tariff rulebooks (Rule 21, IEEE 1547)
 ├── tests/                           # Comprehensive automated test suite (130 tests)
-├── docker-compose.yml               # Local infrastructure (Qdrant vector database)
+├── Dockerfile                       # Multi-stage Dockerfile (backend, frontend, evals)
+├── .dockerignore                    # Excluded local virtualenvs, caches, and test artifacts
+├── docker-compose.yml               # Multi-container orchestration (Qdrant, Backend, Frontend, Evals)
 ├── pyproject.toml                   # Project metadata, dependencies, and tool settings
 ├── requirements.txt                 # Core runtime dependencies
 └── requirements-dev.txt             # Development and testing dependencies
@@ -204,68 +206,79 @@ The engineering scope encompasses **Phases 1 through 5 (Core Architecture - 100%
 
 ### Prerequisites
 
-- **Python 3.12+**
-- **Docker & Docker Compose** (for local Qdrant vector database)
+- **Docker & Docker Compose** (recommended for zero-config containerized spin-up)
+- **Python 3.12+** (for native local development)
 
-### 1. Clone the Repository & Create Virtual Environment
+---
+
+### Option A: Full-Stack Docker Launch (Recommended)
+
+Run the entire InterconnectAI ecosystem (Qdrant vector database, FastAPI async backend, and Streamlit review console) with a single command:
 
 ```bash
+# 1. Clone repository
 git clone https://github.com/will-i-amv/interconnect-ai.git
 cd interconnect-ai
 
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .\.venv\Scripts\Activate.ps1
+# 2. Configure environment
+cp .env.example .env
+
+# 3. Build & start all services
+docker compose up --build
 ```
 
-### 2. Install Dependencies
+**Access Points:**
+- **Streamlit Review Console**: `http://localhost:8501`
+- **FastAPI Backend & Swagger API Docs**: `http://localhost:8000/docs`
+- **Qdrant Vector Database**: `http://localhost:6333/dashboard`
+
+---
+
+### Option B: Native Python Development
+
+For local code development with hot reloading:
+
+#### 1. Virtual Environment & Dependencies
 
 ```bash
-# Editable install with development extras:
-pip install -e ".[dev]"
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .\.venv\Scripts\Activate.ps1
 
-# Or via requirements files:
-pip install -r requirements-dev.txt
+# Install editable package with dev dependencies:
+pip install -e ".[dev]"
 ```
 
-### 3. Configure Environment Variables
+#### 2. Configure Environment
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` to configure your API keys (e.g. `OPENAI_API_KEY`, optional `LANGFUSE_*` credentials).
-
-### 4. Start Local Infrastructure
+#### 3. Start Qdrant Vector Database
 
 ```bash
-docker compose up -d
+docker compose up -d qdrant
 ```
 
-This launches the **Qdrant vector database** at `http://localhost:6333` with persistent volume storage.
-
-### 5. Ingest Utility Tariffs
-
-Index California Rule 21 and IEEE 1547 regulatory documents into the hybrid retrieval engine:
+#### 4. Ingest Utility Tariffs
 
 ```bash
 python -m src.rag.ingest --tariff-dir dataset/tariffs/
 ```
 
-### 6. Start the Services
+#### 5. Launch Application Services
 
-Open two terminal windows:
+Open two terminals:
 
 **Terminal 1 — FastAPI Backend Service:**
 ```bash
 uvicorn api.main:app --reload --port 8000
 ```
-*API documentation available at `http://localhost:8000/docs`.*
 
 **Terminal 2 — Streamlit Review Console:**
 ```bash
 streamlit run frontend/app.py --server.port 8501
 ```
-*Access the interactive dashboard at `http://localhost:8501`.*
 
 ---
 
@@ -282,11 +295,17 @@ pytest tests/
 
 ### Run Automated DeepEval Benchmark Suite
 
+You can execute the evaluation harness natively or inside the containerized environment:
+
 ```bash
+# Option 1: Native runner
 python -m evals.run_benchmarks --threshold 0.90
+
+# Option 2: Containerized runner via Docker Compose
+docker compose run --rm evals
 ```
 
-This executes the evaluation harness against all 25 synthetic applications in `evals/golden_dataset.json`, printing an executive ASCII scorecard and validating quality gates for CI/CD pipelines.
+This evaluates all 25 synthetic applications in `evals/golden_dataset.json`, printing an executive ASCII scorecard and validating quality gates for CI/CD pipelines.
 
 ### Run Pre-commit Linter & Formatting Checks
 
