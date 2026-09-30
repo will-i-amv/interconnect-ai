@@ -25,6 +25,7 @@ from api.schemas import (
 )
 from src.agents.graph import create_interconnection_graph
 from src.agents.state import WorkflowStep
+from src.observability import get_tracer
 from src.schemas.application import ApplicationSchema
 from src.schemas.screening import OverallOutcome
 from src.schemas.tariff import TariffJurisdiction
@@ -231,13 +232,30 @@ async def run_screening(request: ScreeningRunRequest) -> ScreeningRunResponse:
         jurisdiction=request.jurisdiction,
     )
 
+    tracer = get_tracer()
     thread_id = f"api-run-{request.application_id}-{uuid.uuid4().hex[:8]}"
     start_time = time.perf_counter()
 
     # Compile and execute state machine in a worker thread to keep the event loop responsive
     def _execute() -> dict[str, Any]:
-        graph = create_interconnection_graph()
-        return graph.invoke(initial_state, config={"configurable": {"thread_id": thread_id}})
+        with tracer.trace(
+            name="screening_workflow",
+            application_id=request.application_id,
+            jurisdiction=request.jurisdiction.value if request.jurisdiction else None,
+            tags={"thread_id": thread_id, "mode": "run"},
+        ):
+            graph = create_interconnection_graph()
+            cb = tracer.get_langchain_callback(
+                application_id=request.application_id,
+                jurisdiction=str(request.jurisdiction),
+            )
+            return graph.invoke(
+                initial_state,
+                config={
+                    "configurable": {"thread_id": thread_id},
+                    "callbacks": [cb],
+                },
+            )
 
     result_state = await asyncio.to_thread(_execute)
     execution_time_ms = round((time.perf_counter() - start_time) * 1000, 2)
@@ -269,48 +287,62 @@ async def _sse_event_generator(initial_state: dict[str, Any]):
     loop = asyncio.get_running_loop()
 
     def _sync_worker():
+        tracer = get_tracer()
         try:
-            graph = create_interconnection_graph()
-            for update in graph.stream(
-                initial_state,
-                config={"configurable": {"thread_id": thread_id}},
-                stream_mode="updates",
+            with tracer.trace(
+                name="screening_stream_workflow",
+                application_id=app_id,
+                jurisdiction=str(initial_state.get("jurisdiction", "")),
+                tags={"thread_id": thread_id, "mode": "stream"},
             ):
-                if not isinstance(update, dict):
-                    continue
-                for node_name, node_output in update.items():
-                    step_val = (
-                        node_output.get("current_step").value
-                        if hasattr(node_output.get("current_step"), "value")
-                        else str(node_output.get("current_step", node_name.upper()))
-                    )
-                    payload = {
-                        "node": node_name,
-                        "step": step_val,
-                        "message": f"Completed node '{node_name}'",
-                        "errors": node_output.get("errors", []),
-                        "overall_outcome": (
-                            node_output.get("overall_outcome").value
-                            if hasattr(node_output.get("overall_outcome"), "value")
-                            else None
-                        ),
-                        "screens_evaluated": (
-                            len(node_output.get("screen_results", []))
-                            if "screen_results" in node_output
-                            else None
-                        ),
-                        "deficiencies_found": (
-                            len(node_output.get("deficiencies", []))
-                            if "deficiencies" in node_output
-                            else None
-                        ),
-                        "has_letter": bool(node_output.get("formal_letter_markdown")),
-                        "timestamp_utc": datetime.now(UTC).isoformat(),
-                    }
-                    loop.call_soon_threadsafe(
-                        queue.put_nowait,
-                        ("node_complete", payload),
-                    )
+                graph = create_interconnection_graph()
+                cb = tracer.get_langchain_callback(
+                    application_id=app_id,
+                    jurisdiction=str(initial_state.get("jurisdiction", "")),
+                )
+                for update in graph.stream(
+                    initial_state,
+                    config={
+                        "configurable": {"thread_id": thread_id},
+                        "callbacks": [cb],
+                    },
+                    stream_mode="updates",
+                ):
+                    if not isinstance(update, dict):
+                        continue
+                    for node_name, node_output in update.items():
+                        step_val = (
+                            node_output.get("current_step").value
+                            if hasattr(node_output.get("current_step"), "value")
+                            else str(node_output.get("current_step", node_name.upper()))
+                        )
+                        payload = {
+                            "node": node_name,
+                            "step": step_val,
+                            "message": f"Completed node '{node_name}'",
+                            "errors": node_output.get("errors", []),
+                            "overall_outcome": (
+                                node_output.get("overall_outcome").value
+                                if hasattr(node_output.get("overall_outcome"), "value")
+                                else None
+                            ),
+                            "screens_evaluated": (
+                                len(node_output.get("screen_results", []))
+                                if "screen_results" in node_output
+                                else None
+                            ),
+                            "deficiencies_found": (
+                                len(node_output.get("deficiencies", []))
+                                if "deficiencies" in node_output
+                                else None
+                            ),
+                            "has_letter": bool(node_output.get("formal_letter_markdown")),
+                            "timestamp_utc": datetime.now(UTC).isoformat(),
+                        }
+                        loop.call_soon_threadsafe(
+                            queue.put_nowait,
+                            ("node_complete", payload),
+                        )
             loop.call_soon_threadsafe(
                 queue.put_nowait,
                 (
@@ -404,3 +436,35 @@ async def stream_screening_get(
             "X-Accel-Buffering": "no",
         },
     )
+
+
+# -----------------------------------------------------------------------------
+# Telemetry & Observability Endpoints
+# -----------------------------------------------------------------------------
+
+
+@router.get(
+    "/telemetry/traces",
+    summary="Get recent execution traces",
+)
+async def get_traces(application_id: str | None = None) -> list[dict[str, Any]]:
+    """Retrieve telemetry traces and latencies, optionally filtered by application ID."""
+    tracer = get_tracer()
+    traces = tracer.get_traces(application_id=application_id)
+    return [_to_json_serializable(t) for t in traces]
+
+
+@router.get(
+    "/telemetry/summary/{trace_id}",
+    summary="Get telemetry execution summary for a specific trace",
+)
+async def get_trace_summary(trace_id: str) -> dict[str, Any]:
+    """Retrieve summarized latency breakdowns and node timings for a trace."""
+    tracer = get_tracer()
+    summary = tracer.export_summary(trace_id)
+    if "error" in summary:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=summary["error"],
+        )
+    return summary

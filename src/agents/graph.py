@@ -19,6 +19,7 @@ from src.agents.state import (
     WorkflowStep,
 )
 from src.agents.vision_extractor import MultimodalVisionExtractor
+from src.observability import get_tracer
 from src.schemas.screening import (
     OverallOutcome,
     ScreeningReport,
@@ -36,6 +37,7 @@ logger = logging.getLogger(__name__)
 # -----------------------------------------------------------------------------
 
 
+@get_tracer().trace_node("intake")
 def intake_node(state: InterconnectionState) -> dict[str, Any]:
     """Validate incoming application package and establish initial state baseline."""
     app_id = state.get("application_id")
@@ -66,6 +68,7 @@ def intake_node(state: InterconnectionState) -> dict[str, Any]:
     }
 
 
+@get_tracer().trace_node("extraction")
 def extraction_node(state: InterconnectionState) -> dict[str, Any]:
     """Validate or extract electrical parameters (Inverter, Transformer, SLD, Telemetry)."""
     app_id = state.get("application_id", "")
@@ -162,6 +165,7 @@ def extraction_node(state: InterconnectionState) -> dict[str, Any]:
     }
 
 
+@get_tracer().trace_node("retrieval")
 def retrieval_node(state: InterconnectionState) -> dict[str, Any]:
     """Retrieve regulatory grounding clauses and tariffs for the active jurisdiction."""
     app_id = state.get("application_id", "UNKNOWN")
@@ -228,6 +232,7 @@ def retrieval_node(state: InterconnectionState) -> dict[str, Any]:
     }
 
 
+@get_tracer().trace_node("screening")
 def screening_node(state: InterconnectionState) -> dict[str, Any]:
     """Evaluate deterministic engineering screens and record any deficiencies."""
     app_data = state.get("application_data")
@@ -261,6 +266,7 @@ def screening_node(state: InterconnectionState) -> dict[str, Any]:
     }
 
 
+@get_tracer().trace_node("synthesis")
 def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
     """Assemble final formal ScreeningReport and determine approval or deficiency status."""
     app_id = state.get("application_id", "UNKNOWN")
@@ -333,6 +339,7 @@ def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
     }
 
 
+@get_tracer().trace_node("human_review")
 def human_review_node(state: InterconnectionState) -> dict[str, Any]:
     """Human-in-the-loop review checkpoint for overrides and sign-off."""
     app_id = state.get("application_id", "UNKNOWN")
@@ -348,6 +355,7 @@ def human_review_node(state: InterconnectionState) -> dict[str, Any]:
     }
 
 
+@get_tracer().trace_node("error_rollback")
 def error_rollback_node(state: InterconnectionState) -> dict[str, Any]:
     """Safely catch node failures, log diagnostics, and prevent workflow crash."""
     app_id = state.get("application_id", "UNKNOWN")

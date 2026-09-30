@@ -19,6 +19,7 @@ import pymupdf
 from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field
 
+from src.observability import SpanType, get_tracer
 from src.schemas.application import (
     ApplicationSchema,
     DisconnectSwitchLocation,
@@ -491,11 +492,31 @@ class MultimodalVisionExtractor(BaseVisionExtractor):
 
     def extract_sld(self, source: str | Path | bytes) -> SLDExtractionResult:
         """Extract SLD components and metadata from a Single-Line Diagram."""
-        return self.sld_extractor.extract(source)
+        source_name = (
+            getattr(source, "name", str(source)[:40])
+            if not isinstance(source, bytes)
+            else "raw_bytes"
+        )
+        with get_tracer().span(
+            name="vision_extract_sld",
+            span_type=SpanType.VISION,
+            tags={"source": source_name, "device": self.device},
+        ):
+            return self.sld_extractor.extract(source)
 
     def extract_cutsheet(self, source: str | Path | bytes) -> CutsheetExtractionResult:
         """Extract inverter parameters from an equipment cut-sheet."""
-        return self.cutsheet_extractor.extract(source)
+        source_name = (
+            getattr(source, "name", str(source)[:40])
+            if not isinstance(source, bytes)
+            else "raw_bytes"
+        )
+        with get_tracer().span(
+            name="vision_extract_cutsheet",
+            span_type=SpanType.VISION,
+            tags={"source": source_name, "device": self.device},
+        ):
+            return self.cutsheet_extractor.extract(source)
 
     def extract_application_package(
         self,
@@ -540,18 +561,27 @@ class MultimodalVisionExtractor(BaseVisionExtractor):
         Returns:
             New ApplicationSchema instance enriched with extracted data.
         """
-        updated_data: dict[str, Any] = app.model_dump()
+        with get_tracer().span(
+            name="enrich_application",
+            span_type=SpanType.VISION,
+            application_id=app.application_id,
+            tags={
+                "sld_provided": str(sld_path is not None),
+                "cutsheet_provided": str(cutsheet_path is not None),
+            },
+        ):
+            updated_data: dict[str, Any] = app.model_dump()
 
-        if sld_path and Path(sld_path).is_file():
-            sld_res = self.extract_sld(sld_path)
-            updated_data["sld_components"] = sld_res.components
+            if sld_path and Path(sld_path).is_file():
+                sld_res = self.extract_sld(sld_path)
+                updated_data["sld_components"] = sld_res.components
 
-        if cutsheet_path and Path(cutsheet_path).is_file():
-            cut_res = self.extract_cutsheet(cutsheet_path)
-            # Retain count from existing application if configured
-            count = app.inverters[0].count if app.inverters else 1
-            extracted_inv = cut_res.inverter.model_dump()
-            extracted_inv["count"] = count
-            updated_data["inverters"] = [InverterSchema(**extracted_inv)]
+            if cutsheet_path and Path(cutsheet_path).is_file():
+                cut_res = self.extract_cutsheet(cutsheet_path)
+                # Retain count from existing application if configured
+                count = app.inverters[0].count if app.inverters else 1
+                extracted_inv = cut_res.inverter.model_dump()
+                extracted_inv["count"] = count
+                updated_data["inverters"] = [InverterSchema(**extracted_inv)]
 
-        return ApplicationSchema(**updated_data)
+            return ApplicationSchema(**updated_data)

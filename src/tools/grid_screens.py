@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 
+from src.observability import SpanType, get_tracer
 from src.schemas.application import (
     ApplicationSchema,
     DisconnectSwitchLocation,
@@ -725,6 +726,7 @@ DEFAULT_SCREEN_ORDER = [
 ]
 
 
+@get_tracer().trace_tool("run_deterministic_screens", span_type=SpanType.SCREEN)
 def run_deterministic_screens(
     app: ApplicationSchema,
     screens: Sequence[ScreenId] | None = None,
