@@ -159,6 +159,8 @@ interconnect-ai/
 │   ├── applications/                # Benchmark application exhibits (PDFs + JSON)
 │   └── tariffs/                     # Authoritative tariff rulebooks (Rule 21, IEEE 1547)
 ├── tests/                           # Comprehensive automated test suite (130 tests)
+├── AGENTS.md                        # AI coding assistant guidelines & architectural invariants
+├── CLAUDE.md                        # Claude Code project configuration & imports
 ├── Dockerfile                       # Multi-stage Dockerfile (backend, frontend, evals)
 ├── .dockerignore                    # Excluded local virtualenvs, caches, and test artifacts
 ├── docker-compose.yml               # Multi-container orchestration (Qdrant, Backend, Frontend, Evals)
