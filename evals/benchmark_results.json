@@ -1,0 +1,292 @@
+{
+  "timestamp": "2026-09-30T14:40:41.388614+00:00",
+  "dataset_path": "/home/wseba/github/will-i-amv/interconnect-ai/evals/golden_dataset.json",
+  "total_applications": 25,
+  "overall_passed": true,
+  "metrics": [
+    {
+      "metric_name": "Technical Screen Accuracy",
+      "score": 1.0,
+      "threshold": 0.9,
+      "passed": true,
+      "description": "Percentage of all individual screens (A-I) evaluated correctly",
+      "details": {
+        "total_applications": 25,
+        "total_screens_evaluated": 200,
+        "total_screens_matched": 200,
+        "screen_accuracy": 1.0,
+        "outcome_accuracy": 1.0,
+        "code_match_rate": 1.0,
+        "false_passes_on_safety": 0,
+        "safety_screen_precision": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "confusion_matrix": {
+          "tp": 10,
+          "tn": 15,
+          "fp": 0,
+          "fn": 0
+        }
+      }
+    },
+    {
+      "metric_name": "Safety Screen Precision (0 False Passes)",
+      "score": 1.0,
+      "threshold": 1.0,
+      "passed": true,
+      "description": "Zero false passes allowed on safety screens (anti-islanding, disconnect)",
+      "details": {
+        "false_passes_on_safety": 0
+      }
+    },
+    {
+      "metric_name": "Deficiency Code Exact Match Rate",
+      "score": 1.0,
+      "threshold": 0.9,
+      "passed": true,
+      "description": "Percentage of applications matching all expected deficiency codes",
+      "details": {
+        "outcome_accuracy": 1.0
+      }
+    },
+    {
+      "metric_name": "Tariff Citation Faithfulness",
+      "score": 1.0,
+      "threshold": 0.95,
+      "passed": true,
+      "description": "Percentage of generated citations verified against governing tariffs",
+      "details": {
+        "total_citations_checked": 209,
+        "valid_citations": 209,
+        "hallucinated_citations": 0,
+        "citation_faithfulness_score": 1.0,
+        "hallucination_rate": 0.0
+      }
+    },
+    {
+      "metric_name": "Hallucination Rate",
+      "score": 0.0,
+      "threshold": 0.0,
+      "passed": true,
+      "description": "Ratio of hallucinated or non-existent regulatory citations detected",
+      "details": {
+        "hallucinated_count": 0
+      }
+    },
+    {
+      "metric_name": "Extraction Completeness",
+      "score": 0.9938461538461538,
+      "threshold": 0.98,
+      "passed": true,
+      "description": "Percentage of required electrical and telemetry fields populated",
+      "details": {
+        "total_fields_inspected": 650,
+        "populated_fields": 646,
+        "extraction_completeness_score": 0.9938461538461538
+      }
+    },
+    {
+      "metric_name": "Mean Screening Latency",
+      "score": 0.36812832000578055,
+      "threshold": 45000.0,
+      "passed": true,
+      "description": "Mean wall-clock screening execution duration per application",
+      "details": {
+        "total_time_ms": 9.203208000144514,
+        "applications_count": 25
+      }
+    }
+  ],
+  "citation_details": [
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section C.1 & Section D Screen A",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Screen A",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Section D",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D Screen C & IEEE 1453",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Screen C",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D.2",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Section D",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D Screen E",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Screen E",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D Screen F",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Screen F",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D.4",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Section D",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "citation": "CPUC Rule 21 Section D Screen I & IEEE 1547-2018 Clause 8.1",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Screen I",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-002-PASS-COMM-ROOFTOP",
+      "citation": "CPUC Rule 21 Section C.1 & Section D Screen A",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Screen A",
+      "hallucination_flags": []
+    },
+    {
+      "application_id": "GOLD-002-PASS-COMM-ROOFTOP",
+      "citation": "CPUC Rule 21 Section D.1 & IEEE 1547-2018",
+      "is_valid": true,
+      "matched_tariff": "CPUC Electric Rule 21",
+      "matched_section": "Section D",
+      "hallucination_flags": []
+    }
+  ],
+  "screen_details": [
+    {
+      "application_id": "GOLD-001-PASS-RES-SOLAR",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-002-PASS-COMM-ROOFTOP",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-003-PASS-RETAIL-CANOPY",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-004-PASS-UNIV-CAMPUS",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-005-PASS-HOSPITAL-HYBRID",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-006-PASS-COLD-STORAGE",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-007-PASS-WATER-TREATMENT",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-008-PASS-AGRI-WINERY",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-009-PASS-OFFICE-PARK",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    },
+    {
+      "application_id": "GOLD-010-PASS-INDUSTRIAL-MICROGRID",
+      "screens_evaluated": 8,
+      "screens_matched": 8,
+      "deficiency_codes_matched": true,
+      "outcome_matched": true,
+      "false_pass_on_safety": false,
+      "actual_failing_screens": [],
+      "expected_failing_screens": []
+    }
+  ],
+  "summary": {
+    "overall_passed": true,
+    "total_metrics_evaluated": 7,
+    "passed_metrics_count": 7,
+    "total_time_ms": 9.2,
+    "mean_latency_ms": 0.368
+  }
+}
