@@ -1,4 +1,4 @@
-# Development and testing dependencies
+# Development and testing dependencies (mirrors pyproject.toml [project.optional-dependencies] dev)
 -r requirements.txt
 -e .
 

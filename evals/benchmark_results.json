@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-30T14:40:41.388614+00:00",
+  "timestamp": "2026-09-30T18:49:57.332403+00:00",
   "dataset_path": "/home/wseba/github/will-i-amv/interconnect-ai/evals/golden_dataset.json",
   "total_applications": 25,
   "overall_passed": true,
@@ -88,12 +88,12 @@
     },
     {
       "metric_name": "Mean Screening Latency",
-      "score": 0.36812832000578055,
+      "score": 0.2717374400026529,
       "threshold": 45000.0,
       "passed": true,
       "description": "Mean wall-clock screening execution duration per application",
       "details": {
-        "total_time_ms": 9.203208000144514,
+        "total_time_ms": 6.793436000066322,
         "applications_count": 25
       }
     }
@@ -286,7 +286,7 @@
     "overall_passed": true,
     "total_metrics_evaluated": 7,
     "passed_metrics_count": 7,
-    "total_time_ms": 9.2,
-    "mean_latency_ms": 0.368
+    "total_time_ms": 6.79,
+    "mean_latency_ms": 0.272
   }
 }
