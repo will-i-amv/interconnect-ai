@@ -43,8 +43,8 @@ Welcome to InterconnectAI! This document contains essential development workflow
 
 ## 3. Directory Map & Component Roles
 
-- `src/agents/`: LangGraph `StateGraph` state machine (`graph.py`, `state.py`, `letter_generator.py`).
-- `src/screens/` & `src/tools/`: Deterministic Rule 21 and IEEE 1547 calculation engines and multimodal vision extractors.
+- `src/agents/`: LangGraph `StateGraph` state machine (`graph.py`, `state.py`, `letter_generator.py`, `vision_extractor.py`).
+- `src/tools/`: Deterministic Rule 21 and IEEE 1547 calculation engines (`grid_screens.py`).
 - `src/rag/`: Hybrid regulatory retrieval (Qdrant dense vectors + BM25 keyword index + cross-encoder reranker).
 - `src/observability/`: OpenTelemetry and Langfuse tracing instrumentation.
 - `api/`: FastAPI async runner service with SSE streaming endpoints (`/api/screen/*`).

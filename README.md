@@ -140,7 +140,8 @@ interconnect-ai/
 │   ├── agents/
 │   │   ├── graph.py                 # LangGraph StateGraph orchestration
 │   │   ├── letter_generator.py      # Publication-ready decision memo generator
-│   │   └── state.py                 # InterconnectionState & AuditEntry models
+│   │   ├── state.py                 # InterconnectionState & AuditEntry models
+│   │   └── vision_extractor.py      # Multimodal extractor for SLDs and cut-sheets
 │   ├── observability/
 │   │   └── tracer.py                # InterconnectTracer (Langfuse & in-memory)
 │   ├── rag/
@@ -153,8 +154,7 @@ interconnect-ai/
 │   │   ├── screening.py             # ScreenResult, DeficiencyItem, OverallOutcome
 │   │   └── tariff.py                # TariffCitation and jurisdiction models
 │   └── tools/
-│       ├── grid_screens.py          # Deterministic Rule 21 & IEEE 1547 calculators
-│       └── vision_extractor.py      # Multimodal extractor for SLDs and cut-sheets
+│       └── grid_screens.py          # Deterministic Rule 21 & IEEE 1547 calculators
 ├── evals/                           # Evaluation harness & benchmarks
 │   ├── golden_dataset.json          # 25 synthetic applications (15 passes, 10 fails)
 │   ├── golden_dataset.py            # Golden dataset loader & verification utilities
