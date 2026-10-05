@@ -350,7 +350,7 @@ def export_letter_pdf(
 
     doc.save(dest)
     doc.close()
-    logger.info("Exported formal interconnection letter PDF to: %s", dest)
+    logger.info(f"Exported formal interconnection letter PDF to: {dest}")
     return dest
 
 

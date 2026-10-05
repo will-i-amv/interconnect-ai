@@ -405,10 +405,10 @@ class InterconnectTracer:
 
             host = os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
             self._langfuse_client = Langfuse(public_key=pk, secret_key=sk, host=host)
-            logger.info("Langfuse tracing successfully initialized (host=%s)", host)
+            logger.info(f"Langfuse tracing successfully initialized (host={host})")
         except Exception as exc:
             logger.warning(
-                "Failed to initialize Langfuse client: %s. Falling back to local tracer.", exc
+                f"Failed to initialize Langfuse client: {exc}. Falling back to local tracer."
             )
             self._langfuse_client = None
 
@@ -420,7 +420,7 @@ class InterconnectTracer:
         should_enable = (explicit_enable is not False) and bool(collector)
         if should_enable:
             self._phoenix_enabled = True
-            logger.info("Phoenix / OTel endpoint configured: %s", collector)
+            logger.info(f"Phoenix / OTel endpoint configured: {collector}")
 
     @property
     def has_langfuse(self) -> bool:
@@ -465,11 +465,8 @@ class InterconnectTracer:
         _CURRENT_TRACE.set(record)
 
         logger.info(
-            "Trace started: %s (name=%s, app_id=%s, jurisdiction=%s)",
-            trace_id,
-            name,
-            application_id,
-            jurisdiction,
+            f"Trace started: {trace_id} (name={name}, app_id={application_id}, "
+            f"jurisdiction={jurisdiction})"
         )
         return trace_id
 
@@ -512,11 +509,8 @@ class InterconnectTracer:
                 self._langfuse_client.flush()
 
         logger.info(
-            "Trace completed: %s in %0.2fms (status=%s, spans=%d)",
-            target_id,
-            total_duration,
-            status.value,
-            len(updated.spans),
+            f"Trace completed: {target_id} in {total_duration:0.2f}ms "
+            f"(status={status.value}, spans={len(updated.spans)})"
         )
         return updated
 
@@ -691,11 +685,8 @@ class InterconnectTracer:
         )
 
         logger.debug(
-            "Span completed: %s (%s) in %0.2fms [status=%s]",
-            span.name,
-            span.span_type.value,
-            duration_ms,
-            status.value,
+            f"Span completed: {span.name} ({span.span_type.value}) in {duration_ms:0.2f}ms "
+            f"[status={status.value}]"
         )
         return completed_span
 
@@ -790,11 +781,8 @@ class InterconnectTracer:
         current_trace = _CURRENT_TRACE.get()
         app_id = current_trace.application_id if current_trace else None
         logger.error(
-            "Telemetry error recorded [app_id=%s, error_type=%s]: %s | context=%s",
-            app_id,
-            type(error).__name__,
-            error,
-            context,
+            f"Telemetry error recorded [app_id={app_id}, error_type={type(error).__name__}]: "
+            f"{error} | context={context}"
         )
         self.record_metric(
             name="error_count",
@@ -917,7 +905,7 @@ class InterconnectTracer:
 
                 return CallbackHandler()
             except Exception as exc:
-                logger.warning("Could not instantiate Langfuse CallbackHandler: %s", exc)
+                logger.warning(f"Could not instantiate Langfuse CallbackHandler: {exc}")
 
         # Fallback to local interconnect callback handler
         return InterconnectTracingCallback(

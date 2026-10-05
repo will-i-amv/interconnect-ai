@@ -122,7 +122,7 @@ def extraction_node(state: InterconnectionState) -> dict[str, Any]:
                     )
                 )
             except Exception as e:
-                logger.warning("Multimodal enrichment warning: %s", e)
+                logger.warning(f"Multimodal enrichment warning: {e}")
 
         audit_entries.append(
             AuditEntry(
@@ -360,7 +360,7 @@ def error_rollback_node(state: InterconnectionState) -> dict[str, Any]:
     """Safely catch node failures, log diagnostics, and prevent workflow crash."""
     app_id = state.get("application_id", "UNKNOWN")
     err_msgs = state.get("errors", ["Unknown execution error occurred."])
-    logger.error("Error rollback triggered for %s: %s", app_id, err_msgs)
+    logger.error(f"Error rollback triggered for {app_id}: {err_msgs}")
 
     return {
         "current_step": WorkflowStep.ERROR,

@@ -201,8 +201,7 @@ class BGEReranker(BaseReranker):
             scores = [self._sigmoid(float(logit)) for logit in logits]
         except Exception as exc:
             logger.warning(
-                "ONNX cross-encoder execution failed (%s); falling back to mock scoring.",
-                exc,
+                f"ONNX cross-encoder execution failed ({exc}); falling back to mock scoring."
             )
             mock = DeterministicMockReranker()
             return mock.rerank(query=query, candidates=candidates, top_n=top_n)

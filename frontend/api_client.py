@@ -47,7 +47,7 @@ class InterconnectApiClient:
                 if res.status_code == 200:
                     return res.json()
         except Exception as exc:
-            logger.debug("FastAPI unreachable (%s), using local dataset catalog fallback.", exc)
+            logger.debug(f"FastAPI unreachable ({exc}), using local dataset catalog fallback.")
 
         # Resilient local fallback
         catalog = load_dataset_catalog()
@@ -79,7 +79,7 @@ class InterconnectApiClient:
                 if res.status_code == 200:
                     return res.json()
         except Exception as exc:
-            logger.debug("FastAPI unreachable (%s), using local application loader.", exc)
+            logger.debug(f"FastAPI unreachable ({exc}), using local application loader.")
 
         # Local fallback
         pkg = load_application(application_id)
@@ -131,7 +131,7 @@ class InterconnectApiClient:
                 if res.status_code == 200:
                     return res.json()
         except Exception as exc:
-            logger.debug("FastAPI runner unreachable (%s), executing local state machine.", exc)
+            logger.debug(f"FastAPI runner unreachable ({exc}), executing local state machine.")
 
         # Fallback to direct state machine invocation
         from src.agents.graph import create_interconnection_graph

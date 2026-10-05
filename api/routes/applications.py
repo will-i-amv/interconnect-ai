@@ -91,7 +91,7 @@ def _resolve_application_package(
                 if p and isinstance(p, Path) and p.is_file():
                     raw_docs.append(str(p))
         except Exception as exc:
-            logger.warning("Could not resolve document paths for %s: %s", application_id, exc)
+            logger.warning(f"Could not resolve document paths for {application_id}: {exc}")
 
     if app_data is None and not has_benchmark:
         raise HTTPException(
@@ -355,7 +355,7 @@ async def _sse_event_generator(initial_state: dict[str, Any]):
                 ),
             )
         except Exception as exc:
-            logger.exception("Error during graph stream execution: %s", exc)
+            logger.exception(f"Error during graph stream execution: {exc}")
             loop.call_soon_threadsafe(
                 queue.put_nowait,
                 (

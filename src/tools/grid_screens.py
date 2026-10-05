@@ -747,12 +747,12 @@ def run_deterministic_screens(
     screen_results: list[ScreenResult] = []
     deficiencies: list[DeficiencyItem] = []
 
-    logger.info("Running %d deterministic screens for %s", len(target_screens), app.application_id)
+    logger.info(f"Running {len(target_screens)} deterministic screens for {app.application_id}")
 
     for screen_id in target_screens:
         evaluator = SCREEN_EVALUATORS.get(screen_id)
         if not evaluator:
-            logger.warning("No evaluator registered for screen %s", screen_id)
+            logger.warning(f"No evaluator registered for screen {screen_id}")
             continue
 
         result, deficiency = evaluator(app)
@@ -761,9 +761,7 @@ def run_deterministic_screens(
             deficiencies.append(deficiency)
 
     logger.info(
-        "Screening complete for %s: %d screens evaluated, %d deficiency(ies) found",
-        app.application_id,
-        len(screen_results),
-        len(deficiencies),
+        f"Screening complete for {app.application_id}: {len(screen_results)} screens evaluated, "
+        f"{len(deficiencies)} deficiency(ies) found"
     )
     return screen_results, deficiencies

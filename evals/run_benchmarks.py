@@ -737,7 +737,7 @@ def run_benchmarks(
     # Optional DeepEval LLM evaluation
     if run_deepeval_llm:
         test_cases = build_deepeval_test_cases(dataset)
-        logger.info("Constructed %d DeepEval LLMTestCase objects", len(test_cases))
+        logger.info(f"Constructed {len(test_cases)} DeepEval LLMTestCase objects")
 
     # Overall CI/CD Gate
     overall_passed = all(m.passed for m in metrics)

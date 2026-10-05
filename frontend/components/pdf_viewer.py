@@ -20,7 +20,7 @@ def get_pdf_page_count(pdf_path: str | Path) -> int:
         with pymupdf.open(p) as doc:
             return len(doc)
     except Exception as exc:
-        logger.warning("Failed to inspect PDF page count for %s: %s", p, exc)
+        logger.warning(f"Failed to inspect PDF page count for {p}: {exc}")
         return 0
 
 
@@ -132,4 +132,4 @@ def render_pdf_viewer(
             use_container_width=True,
         )
     except Exception as exc:
-        logger.debug("Failed to read raw PDF for download: %s", exc)
+        logger.debug(f"Failed to read raw PDF for download: {exc}")

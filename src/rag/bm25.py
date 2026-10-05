@@ -247,7 +247,7 @@ class BM25Index:
         }
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
-        logger.info("Saved BM25 index with %d chunks to %s", len(self._chunks), path)
+        logger.info(f"Saved BM25 index with {len(self._chunks)} chunks to {path}")
 
     @classmethod
     def load(cls, file_path: Path | str) -> BM25Index:
@@ -263,5 +263,5 @@ class BM25Index:
             b=data.get("b", 0.75),
             epsilon=data.get("epsilon", 0.25),
         )
-        logger.info("Loaded BM25 index with %d chunks from %s", len(chunks), path)
+        logger.info(f"Loaded BM25 index with {len(chunks)} chunks from {path}")
         return instance

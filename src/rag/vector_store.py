@@ -66,8 +66,7 @@ class QdrantVectorStore:
                 self._client = test_client
             except Exception as exc:
                 logger.warning(
-                    "Remote Qdrant at localhost:6333 unreachable (%s). Using in-memory store.",
-                    exc,
+                    f"Remote Qdrant at localhost:6333 unreachable ({exc}). Using in-memory store."
                 )
                 self._client = QdrantClient(location=":memory:")
 
@@ -93,16 +92,14 @@ class QdrantVectorStore:
             collection_exists = collection_name in collections
 
         if collection_exists and recreate:
-            logger.info("Recreating collection '%s'", collection_name)
+            logger.info(f"Recreating collection '{collection_name}'")
             self._client.delete_collection(collection_name)
             collection_exists = False
 
         if not collection_exists:
             logger.info(
-                "Creating collection '%s' with vector size %d and distance %s",
-                collection_name,
-                vector_size,
-                distance,
+                f"Creating collection '{collection_name}' with vector size {vector_size} "
+                f"and distance {distance}"
             )
             self._client.create_collection(
                 collection_name=collection_name,
@@ -166,9 +163,7 @@ class QdrantVectorStore:
             total_indexed += len(points)
 
         logger.info(
-            "Successfully indexed %d chunks into collection '%s'",
-            total_indexed,
-            collection_name,
+            f"Successfully indexed {total_indexed} chunks into collection '{collection_name}'"
         )
         return total_indexed
 

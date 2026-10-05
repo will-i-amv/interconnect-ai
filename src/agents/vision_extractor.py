@@ -485,9 +485,8 @@ class MultimodalVisionExtractor(BaseVisionExtractor):
         self.cutsheet_extractor = CutsheetVisionExtractor(device=self.device)
 
         logger.info(
-            "Initialized MultimodalVisionExtractor on device=%s (prefer_vlm=%s)",
-            self.device,
-            self.prefer_vlm,
+            f"Initialized MultimodalVisionExtractor on device={self.device} "
+            f"(prefer_vlm={self.prefer_vlm})"
         )
 
     def extract_sld(self, source: str | Path | bytes) -> SLDExtractionResult:
