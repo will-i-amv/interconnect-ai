@@ -21,6 +21,7 @@ InterconnectAI automates the intake, engineering document validation, determinis
 - [Key Features](#key-features)
 - [System Architecture](#system-architecture)
 - [Core Engineering Guarantees](#core-engineering-guarantees)
+- [Interconnection Domain Glossary](docs/glossary.md)
 - [Repository Structure](#repository-structure)
 - [Input Contracts & Schemas](#input-contracts--schemas)
 - [Implementation Roadmap & Milestones](#implementation-roadmap--milestones)
@@ -35,6 +36,9 @@ InterconnectAI automates the intake, engineering document validation, determinis
 ## Executive Summary & Industry Context
 
 Across United States regional transmission operators (CAISO, PJM, ERCOT, NYISO) and electric distribution utilities, the queue for interconnecting new generation and storage exceeds **2,600 GW**—more than double the existing US commercial generating capacity. Under federal mandates (**FERC Order 2023**) and state frameworks (**California Public Utilities Commission Electric Rule 21**, **IEEE Standard 1547-2018**), utilities are legally required to evaluate Fast Track and Initial Review applications within strict statutory windows (typically 10–30 business days).
+
+> [!TIP]
+> **Domain Glossary**: For detailed engineering definitions, statutory screening criteria (Screens A through M), IEEE 1547 mandates, and tariff terminology, see the [Interconnection Domain Glossary](docs/glossary.md).
 
 However, each application demands hours of senior distribution engineer review:
 1. **Multi-Exhibit Parsing**: Ingesting complex Single-Line Diagrams (SLDs), cut-sheets, and inverter datasheets.
@@ -158,6 +162,9 @@ interconnect-ai/
 ├── dataset/                         # Local evaluation and sample data
 │   ├── applications/                # Benchmark application exhibits (PDFs + JSON)
 │   └── tariffs/                     # Authoritative tariff rulebooks (Rule 21, IEEE 1547)
+├── docs/                            # Architectural specifications & business logic dictionary
+│   ├── glossary.md                  # Comprehensive electric interconnection & business logic glossary
+│   └── ticket_descriptions.md       # Roadmap & engineering ticket breakdown
 ├── tests/                           # Comprehensive automated test suite (130 tests)
 ├── AGENTS.md                        # AI coding assistant guidelines & architectural invariants
 ├── CLAUDE.md                        # Claude Code project configuration & imports
