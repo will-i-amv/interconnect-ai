@@ -67,7 +67,7 @@ def append_citations(
     new_items: Sequence[TariffCitation],
 ) -> list[TariffCitation]:
     """Reducer that appends citations while deduplicating by citation_id."""
-    seen = {c.citation_id for c in existing}
+    seen = {cit.citation_id for cit in existing}
     merged = list(existing)
     for item in new_items:
         if item.citation_id not in seen:
@@ -81,7 +81,7 @@ def append_screens(
     new_items: Sequence[ScreenResult],
 ) -> list[ScreenResult]:
     """Reducer that appends screen results, updating by screen_id if already present."""
-    screen_map = {s.screen_id: s for s in existing}
+    screen_map = {scr.screen_id: scr for scr in existing}
     for item in new_items:
         screen_map[item.screen_id] = item
     return list(screen_map.values())

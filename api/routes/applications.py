@@ -51,7 +51,7 @@ def _to_json_serializable(obj: Any) -> Any:
     if isinstance(obj, Path):
         return str(obj)
     if isinstance(obj, dict):
-        return {str(k): _to_json_serializable(v) for k, v in obj.items()}
+        return {str(key): _to_json_serializable(val) for key, val in obj.items()}
     if isinstance(obj, list | tuple | set):
         return [_to_json_serializable(item) for item in obj]
     return obj
@@ -451,7 +451,7 @@ async def get_traces(application_id: str | None = None) -> list[dict[str, Any]]:
     """Retrieve telemetry traces and latencies, optionally filtered by application ID."""
     tracer = get_tracer()
     traces = tracer.get_traces(application_id=application_id)
-    return [_to_json_serializable(t) for t in traces]
+    return [_to_json_serializable(tr) for tr in traces]
 
 
 @router.get(

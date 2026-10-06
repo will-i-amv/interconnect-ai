@@ -145,7 +145,7 @@ def tokenize_regulatory_text(text: str) -> list[str]:
     Preserves technical tokens like 'UL 1741-SB', '15%', 'Screen D', '2.0s', 'IEEE-1547'.
     """
     raw_tokens = re.findall(r"[a-zA-Z0-9]+(?:[-_.][a-zA-Z0-9]+)*%?", text.lower())
-    filtered = [t for t in raw_tokens if t not in STOP_WORDS and len(t) >= 1]
+    filtered = [tok for tok in raw_tokens if tok not in STOP_WORDS and len(tok) >= 1]
     return filtered
 
 
@@ -182,7 +182,7 @@ class BM25Index:
     def index_chunks(self, chunks: Sequence[TariffChunk]) -> int:
         """Index a collection of TariffChunks into the BM25 model."""
         self._chunks = list(chunks)
-        self._corpus = [tokenize_regulatory_text(c.content) for c in self._chunks]
+        self._corpus = [tokenize_regulatory_text(chk.content) for chk in self._chunks]
         if self._corpus:
             self._bm25 = BM25Okapi(
                 self._corpus,
@@ -233,7 +233,7 @@ class BM25Index:
         candidate_indices.sort(key=lambda idx: float(scores[idx]), reverse=True)
         top_indices = candidate_indices[:top_k]
 
-        return [(self._chunks[i], float(scores[i])) for i in top_indices]
+        return [(self._chunks[idx], float(scores[idx])) for idx in top_indices]
 
     def save(self, file_path: Path | str) -> None:
         """Serialize chunks and tokenized corpus to a JSON file."""
@@ -243,7 +243,7 @@ class BM25Index:
             "k1": self._k1,
             "b": self._b,
             "epsilon": self._epsilon,
-            "chunks": [c.model_dump(mode="json") for c in self._chunks],
+            "chunks": [chk.model_dump(mode="json") for chk in self._chunks],
         }
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
@@ -256,7 +256,7 @@ class BM25Index:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
 
-        chunks = [TariffChunk.model_validate(c) for c in data.get("chunks", [])]
+        chunks = [TariffChunk.model_validate(chk_data) for chk_data in data.get("chunks", [])]
         instance = cls(
             chunks=chunks,
             k1=data.get("k1", 1.5),

@@ -54,7 +54,7 @@ def build_citation(
         exact_quote = quote.strip()
     else:
         # Extract first substantive sentence or up to 160 characters
-        sentences = [s.strip() for s in chunk.raw_text.split(".") if s.strip()]
+        sentences = [sentence.strip() for sentence in chunk.raw_text.split(".") if sentence.strip()]
         exact_quote = sentences[0] + "." if sentences else chunk.raw_text[:160].strip()
 
     return TariffCitation(
@@ -169,12 +169,12 @@ class BGEReranker(BaseReranker):
         chunk_list: list[TariffChunk] = []
         original_fused: list[float | None] = []
 
-        for c in candidates:
-            if isinstance(c, RetrievedChunk):
-                chunk_list.append(c.chunk)
-                original_fused.append(c.fused_score)
+        for cand in candidates:
+            if isinstance(cand, RetrievedChunk):
+                chunk_list.append(cand.chunk)
+                original_fused.append(cand.fused_score)
             else:
-                chunk_list.append(c)
+                chunk_list.append(cand)
                 original_fused.append(None)
 
         try:
@@ -184,8 +184,8 @@ class BGEReranker(BaseReranker):
             pairs = [(query, chunk.content) for chunk in chunk_list]
             encodings = self._tokenizer.encode_batch(pairs)
 
-            input_ids = np.array([e.ids for e in encodings], dtype=np.int64)
-            attention_mask = np.array([e.attention_mask for e in encodings], dtype=np.int64)
+            input_ids = np.array([enc.ids for enc in encodings], dtype=np.int64)
+            attention_mask = np.array([enc.attention_mask for enc in encodings], dtype=np.int64)
 
             inputs: dict[str, Any] = {
                 "input_ids": input_ids,
@@ -194,7 +194,9 @@ class BGEReranker(BaseReranker):
             # Add token_type_ids if required by the model
             input_names = [inp.name for inp in self._session.get_inputs()]
             if "token_type_ids" in input_names:
-                inputs["token_type_ids"] = np.array([e.type_ids for e in encodings], dtype=np.int64)
+                inputs["token_type_ids"] = np.array(
+                    [enc.type_ids for enc in encodings], dtype=np.int64
+                )
 
             outputs = self._session.run(None, inputs)
             logits = outputs[0].flatten()
@@ -249,12 +251,12 @@ class DeterministicMockReranker(BaseReranker):
         chunk_list: list[TariffChunk] = []
         original_fused: list[float | None] = []
 
-        for c in candidates:
-            if isinstance(c, RetrievedChunk):
-                chunk_list.append(c.chunk)
-                original_fused.append(c.fused_score)
+        for cand in candidates:
+            if isinstance(cand, RetrievedChunk):
+                chunk_list.append(cand.chunk)
+                original_fused.append(cand.fused_score)
             else:
-                chunk_list.append(c)
+                chunk_list.append(cand)
                 original_fused.append(None)
 
         scored: list[tuple[TariffChunk, float, float | None]] = []

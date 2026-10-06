@@ -120,24 +120,24 @@ def generate_letter_markdown(state: InterconnectionState) -> str:
     )
     lines.append("|---|---|---|---|---|:---:|")
 
-    for s in screen_results:
-        status_badge = "**PASS**" if s.status == ScreenStatus.PASS else "**FAIL**"
-        if isinstance(s.calculated_value, float):
-            val_str = f"{s.calculated_value:.2f}"
-        elif s.calculated_value is not None:
-            val_str = str(s.calculated_value)
+    for scr in screen_results:
+        status_badge = "**PASS**" if scr.status == ScreenStatus.PASS else "**FAIL**"
+        if isinstance(scr.calculated_value, float):
+            val_str = f"{scr.calculated_value:.2f}"
+        elif scr.calculated_value is not None:
+            val_str = str(scr.calculated_value)
         else:
             val_str = "Verified"
 
-        if isinstance(s.threshold_value, float):
-            thresh_str = f"{s.threshold_value:.2f}"
-        elif s.threshold_value is not None:
-            thresh_str = str(s.threshold_value)
+        if isinstance(scr.threshold_value, float):
+            thresh_str = f"{scr.threshold_value:.2f}"
+        elif scr.threshold_value is not None:
+            thresh_str = str(scr.threshold_value)
         else:
             thresh_str = "Standard Spec"
 
         lines.append(
-            f"| `{s.screen_id}` | {s.screen_name} | {s.citation} | "
+            f"| `{scr.screen_id}` | {scr.screen_name} | {scr.citation} | "
             f"{val_str} | {thresh_str} | {status_badge} |"
         )
     lines.append("")
@@ -151,17 +151,17 @@ def generate_letter_markdown(state: InterconnectionState) -> str:
         )
         lines.append("")
 
-        for idx, d in enumerate(deficiencies, 1):
-            lines.append(f"#### Deficiency {idx}: {d.code} — {d.title}")
-            lines.append(f"- **Violating Screen**: `{d.violating_screen}`")
-            lines.append(f"- **Description**: {d.description}")
+        for idx, def_item in enumerate(deficiencies, 1):
+            lines.append(f"#### Deficiency {idx}: {def_item.code} — {def_item.title}")
+            lines.append(f"- **Violating Screen**: `{def_item.violating_screen}`")
+            lines.append(f"- **Description**: {def_item.description}")
             lines.append(
-                f"- **Cure Deadline**: **{d.cure_deadline_business_days} Business Days** "
+                f"- **Cure Deadline**: **{def_item.cure_deadline_business_days} Business Days** "
                 "from receipt of this notice"
             )
-            lines.append(f"- **Required Corrective Action**: {d.required_cure_action}")
-            if d.tariff_citation:
-                lines.append(f"- **Governing Regulatory Citation**: {d.tariff_citation}")
+            lines.append(f"- **Required Corrective Action**: {def_item.required_cure_action}")
+            if def_item.tariff_citation:
+                lines.append(f"- **Governing Regulatory Citation**: {def_item.tariff_citation}")
             lines.append("")
 
     # 6. Regulatory Grounding & Verbatim Tariff Citations
@@ -172,12 +172,12 @@ def generate_letter_markdown(state: InterconnectionState) -> str:
             "tariff clauses and standards:"
         )
         lines.append("")
-        for c in citations:
-            lines.append(f"- **{c.citation_label}** (`{c.citation_id}`):")
-            lines.append(f"  - *Standard*: {c.document_title} ({c.jurisdiction.value})")
-            lines.append(f"  - *Section*: {' > '.join(c.section_hierarchy)}: {c.section_title}")
-            lines.append(f"  - *Source Reference*: `{c.source_filename}`, Page {c.page_number}")
-            lines.append(f'  - *Regulatory Clause*: "{c.exact_quote}"')
+        for cit in citations:
+            lines.append(f"- **{cit.citation_label}** (`{cit.citation_id}`):")
+            lines.append(f"  - *Standard*: {cit.document_title} ({cit.jurisdiction.value})")
+            lines.append(f"  - *Section*: {' > '.join(cit.section_hierarchy)}: {cit.section_title}")
+            lines.append(f"  - *Source Reference*: `{cit.source_filename}`, Page {cit.page_number}")
+            lines.append(f'  - *Regulatory Clause*: "{cit.exact_quote}"')
         lines.append("")
 
     # 7. Next Steps & Applicant Action Plan
@@ -384,7 +384,7 @@ def _parse_markdown_into_pdf_sections(md_text: str) -> list[tuple[str, str]]:
     if current_lines:
         sections.append((current_title, "\n".join(current_lines).strip()))
 
-    return [(t, b) for t, b in sections if b.strip()]
+    return [(sec_title, sec_body) for sec_title, sec_body in sections if sec_body.strip()]
 
 
 class LetterGenerator:

@@ -49,9 +49,9 @@ def render_dashboard(client: InterconnectApiClient) -> None:
 
     # Compute KPI Metrics
     total_apps = len(apps)
-    approved_apps = sum(1 for a in apps if a.get("expected_outcome") == "FAST_TRACK_APPROVED")
-    deficient_apps = sum(1 for a in apps if a.get("expected_outcome") == "DEFICIENCY_ISSUED")
-    total_capacity_mw = sum(a.get("capacity_kw", 0.0) for a in apps) / 1000.0
+    approved_apps = sum(1 for app in apps if app.get("expected_outcome") == "FAST_TRACK_APPROVED")
+    deficient_apps = sum(1 for app in apps if app.get("expected_outcome") == "DEFICIENCY_ISSUED")
+    total_capacity_mw = sum(app.get("capacity_kw", 0.0) for app in apps) / 1000.0
     pass_pct = (approved_apps / total_apps * 100) if total_apps else 0.0
     def_pct = (deficient_apps / total_apps * 100) if total_apps else 0.0
 
@@ -124,7 +124,7 @@ def render_dashboard(client: InterconnectApiClient) -> None:
             label_visibility="collapsed",
         )
     with filter_col2:
-        utilities = sorted(list({a.get("utility", "") for a in apps if a.get("utility")}))
+        utilities = sorted(list({app.get("utility", "") for app in apps if app.get("utility")}))
         selected_utility = st.selectbox(
             "Filter by Utility",
             options=["All Utilities"] + utilities,
@@ -147,34 +147,34 @@ def render_dashboard(client: InterconnectApiClient) -> None:
     filtered_apps = list(apps)
 
     if search_query:
-        q = search_query.lower()
+        query = search_query.lower()
         filtered_apps = [
-            a
-            for a in filtered_apps
-            if q in a.get("application_id", "").lower()
-            or q in a.get("applicant_name", "").lower()
-            or q in a.get("feeder_id", "").lower()
+            app
+            for app in filtered_apps
+            if query in app.get("application_id", "").lower()
+            or query in app.get("applicant_name", "").lower()
+            or query in app.get("feeder_id", "").lower()
         ]
 
     if selected_utility != "All Utilities":
-        filtered_apps = [a for a in filtered_apps if a.get("utility") == selected_utility]
+        filtered_apps = [app for app in filtered_apps if app.get("utility") == selected_utility]
 
     if selected_outcome == "Approved (Fast-Track)":
         filtered_apps = [
-            a for a in filtered_apps if a.get("expected_outcome") == "FAST_TRACK_APPROVED"
+            app for app in filtered_apps if app.get("expected_outcome") == "FAST_TRACK_APPROVED"
         ]
     elif selected_outcome == "Deficient (Requires Cure)":
         filtered_apps = [
-            a for a in filtered_apps if a.get("expected_outcome") == "DEFICIENCY_ISSUED"
+            app for app in filtered_apps if app.get("expected_outcome") == "DEFICIENCY_ISSUED"
         ]
 
     # Apply Sorting
     if sort_by == "Capacity: High to Low":
-        filtered_apps.sort(key=lambda x: x.get("capacity_kw", 0.0), reverse=True)
+        filtered_apps.sort(key=lambda item: item.get("capacity_kw", 0.0), reverse=True)
     elif sort_by == "Capacity: Low to High":
-        filtered_apps.sort(key=lambda x: x.get("capacity_kw", 0.0))
+        filtered_apps.sort(key=lambda item: item.get("capacity_kw", 0.0))
     else:
-        filtered_apps.sort(key=lambda x: x.get("application_id", ""))
+        filtered_apps.sort(key=lambda item: item.get("application_id", ""))
 
     st.markdown(
         f"<div style='font-size: 0.9rem; color: #94a3b8; margin: 10px 0 16px 0;'>"
@@ -192,17 +192,17 @@ def render_dashboard(client: InterconnectApiClient) -> None:
 
     with tab_table:
         table_records = []
-        for a in filtered_apps:
+        for app in filtered_apps:
             table_records.append(
                 {
-                    "Application ID": a.get("application_id"),
-                    "Applicant": a.get("applicant_name"),
-                    "Type": a.get("project_type"),
-                    "Capacity (kW)": a.get("capacity_kw"),
-                    "Utility": a.get("utility"),
-                    "Feeder ID": a.get("feeder_id"),
-                    "Status": a.get("expected_outcome"),
-                    "Failing Screens": ", ".join(a.get("failing_screens", [])) or "None (Clean)",
+                    "Application ID": app.get("application_id"),
+                    "Applicant": app.get("applicant_name"),
+                    "Type": app.get("project_type"),
+                    "Capacity (kW)": app.get("capacity_kw"),
+                    "Utility": app.get("utility"),
+                    "Feeder ID": app.get("feeder_id"),
+                    "Status": app.get("expected_outcome"),
+                    "Failing Screens": ", ".join(app.get("failing_screens", [])) or "None (Clean)",
                 }
             )
         df = pd.DataFrame(table_records)
@@ -316,19 +316,19 @@ def _render_application_card(app: dict[str, Any], client: InterconnectApiClient)
                 st.markdown("**Grid Feeder Telemetry**")
                 tel_c1, tel_c2, tel_c3, tel_c4 = st.columns(4)
                 with tel_c1:
-                    v_kv = telemetry.get(
+                    voltage_kv = telemetry.get(
                         "nominal_voltage_kv", telemetry.get("distribution_voltage_kv", 12.47)
                     )
-                    st.metric("Distribution Voltage", f"{v_kv:.2f} kV")
+                    st.metric("Distribution Voltage", f"{voltage_kv:.2f} kV")
                 with tel_c2:
-                    pk = telemetry.get("feeder_peak_load_kw", 0.0)
-                    st.metric("Annual Peak Load", f"{pk:,.0f} kW")
+                    peak_load = telemetry.get("feeder_peak_load_kw", 0.0)
+                    st.metric("Annual Peak Load", f"{peak_load:,.0f} kW")
                 with tel_c3:
-                    mn = telemetry.get("daytime_min_load_kw", 0.0)
-                    st.metric("Daytime Min Load", f"{mn:,.0f} kW")
+                    min_load = telemetry.get("daytime_min_load_kw", 0.0)
+                    st.metric("Daytime Min Load", f"{min_load:,.0f} kW")
                 with tel_c4:
-                    der = telemetry.get("existing_der_kw", 0.0)
-                    st.metric("Existing DER", f"{der:,.0f} kW")
+                    existing_der = telemetry.get("existing_der_kw", 0.0)
+                    st.metric("Existing DER", f"{existing_der:,.0f} kW")
 
                 st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
                 st.markdown("**Associated Application Documents**")

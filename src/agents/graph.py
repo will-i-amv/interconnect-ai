@@ -226,7 +226,7 @@ def retrieval_node(state: InterconnectionState) -> dict[str, Any]:
                 step=WorkflowStep.REGULATORY_RETRIEVAL,
                 action=AuditAction.CITATION_RETRIEVED,
                 message=f"Retrieved {len(citations)} tariff citations for screening evaluation",
-                details={"citation_ids": [c.citation_id for c in citations]},
+                details={"citation_ids": [cit.citation_id for cit in citations]},
             )
         ],
     }
@@ -258,7 +258,7 @@ def screening_node(state: InterconnectionState) -> dict[str, Any]:
                     f"{len(deficiencies)} deficiency(ies) identified"
                 ),
                 details={
-                    "screens_evaluated": [s.screen_id for s in screen_results],
+                    "screens_evaluated": [scr.screen_id for scr in screen_results],
                     "deficiencies_count": len(deficiencies),
                 },
             )
@@ -274,7 +274,7 @@ def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
     deficiencies = state.get("deficiencies", [])
     app_data = state.get("application_data")
 
-    has_failures = any(s.status == ScreenStatus.FAIL for s in screen_results)
+    has_failures = any(scr.status == ScreenStatus.FAIL for scr in screen_results)
     overall_outcome = (
         OverallOutcome.DEFICIENCY_ISSUED if has_failures else OverallOutcome.FAST_TRACK_APPROVED
     )

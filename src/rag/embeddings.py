@@ -157,7 +157,7 @@ class DeterministicMockEmbeddingService(BaseEmbeddingService):
 
     def embed_batch(self, texts: Sequence[str]) -> list[list[float]]:
         """Embed batch of text strings deterministically."""
-        return [self._generate_vector(t) for t in texts]
+        return [self._generate_vector(txt) for txt in texts]
 
 
 def get_embedding_service(

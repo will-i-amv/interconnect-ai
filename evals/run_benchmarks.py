@@ -184,10 +184,14 @@ class TariffCorpusVerifier:
         if "RULE 21" in cit_upper or "CPUC" in cit_upper:
             matched_tariff = "CPUC Electric Rule 21"
             screens = [
-                s for s in self.VALID_TARIFF_SECTIONS["CPUC_RULE_21"] if s.startswith("Screen")
+                sec
+                for sec in self.VALID_TARIFF_SECTIONS["CPUC_RULE_21"]
+                if sec.startswith("Screen")
             ]
             sections = [
-                s for s in self.VALID_TARIFF_SECTIONS["CPUC_RULE_21"] if not s.startswith("Screen")
+                sec
+                for sec in self.VALID_TARIFF_SECTIONS["CPUC_RULE_21"]
+                if not sec.startswith("Screen")
             ]
             ordered_candidates = sorted(screens, key=len, reverse=True) + sorted(
                 sections, key=len, reverse=True
@@ -259,8 +263,10 @@ def evaluate_screening_accuracy(
 
     for app in dataset.applications:
         screen_results, deficiencies = run_deterministic_screens(app.application_data)
-        actual_failing = [s.screen_id for s in screen_results if s.status == ScreenStatus.FAIL]
-        actual_codes = [d.code for d in deficiencies]
+        actual_failing = [
+            scr.screen_id for scr in screen_results if scr.status == ScreenStatus.FAIL
+        ]
+        actual_codes = [def_item.code for def_item in deficiencies]
 
         has_failures = bool(actual_failing)
         actual_outcome = (
@@ -277,9 +283,9 @@ def evaluate_screening_accuracy(
 
         # For all 9 screens, check if actual status matches expectation
         app_screen_matches = 0
-        for s in screen_results:
-            expected_fail = s.screen_id in expected_failing_set
-            actual_fail = s.status == ScreenStatus.FAIL
+        for scr in screen_results:
+            expected_fail = scr.screen_id in expected_failing_set
+            actual_fail = scr.status == ScreenStatus.FAIL
             if expected_fail == actual_fail:
                 app_screen_matches += 1
         total_screens_matched += app_screen_matches
@@ -333,8 +339,8 @@ def evaluate_screening_accuracy(
                 deficiency_codes_matched=is_code_match,
                 outcome_matched=is_outcome_match,
                 false_pass_on_safety=app_safety_false_pass,
-                actual_failing_screens=[s.value for s in actual_failing],
-                expected_failing_screens=[s.value for s in app.ground_truth.failing_screens],
+                actual_failing_screens=[scr.value for scr in actual_failing],
+                expected_failing_screens=[scr.value for scr in app.ground_truth.failing_screens],
             )
         )
 
@@ -387,12 +393,12 @@ def evaluate_citation_faithfulness(
 
         # Collect citations from screen results and deficiencies
         all_citations: list[str] = []
-        for s in screen_results:
-            if s.citation:
-                all_citations.append(s.citation)
-        for d in deficiencies:
-            if d.tariff_citation:
-                all_citations.append(d.tariff_citation)
+        for scr in screen_results:
+            if scr.citation:
+                all_citations.append(scr.citation)
+        for def_item in deficiencies:
+            if def_item.tariff_citation:
+                all_citations.append(def_item.tariff_citation)
 
         # Also verify ground truth required citations
         for cit in app.ground_truth.required_citations:
@@ -460,7 +466,7 @@ def evaluate_extraction_completeness(dataset: GoldenDataset) -> dict[str, Any]:
         ]
 
         total_fields += len(checks)
-        populated_fields += sum(1 for c in checks if c)
+        populated_fields += sum(1 for chk in checks if chk)
 
         # Inverter specs completeness
         for inv in data.inverters:
@@ -473,7 +479,7 @@ def evaluate_extraction_completeness(dataset: GoldenDataset) -> dict[str, Any]:
                 inv.anti_islanding_trip_time_s is not None,
             ]
             total_fields += len(inv_checks)
-            populated_fields += sum(1 for c in inv_checks if c)
+            populated_fields += sum(1 for chk in inv_checks if chk)
 
         # Transformer specs
         if data.transformer:
@@ -484,7 +490,7 @@ def evaluate_extraction_completeness(dataset: GoldenDataset) -> dict[str, Any]:
                 data.transformer.secondary_voltage_v > 0,
             ]
             total_fields += len(tx_checks)
-            populated_fields += sum(1 for c in tx_checks if c)
+            populated_fields += sum(1 for chk in tx_checks if chk)
 
         # SLD components
         if data.sld_components:
@@ -493,7 +499,7 @@ def evaluate_extraction_completeness(dataset: GoldenDataset) -> dict[str, Any]:
                 data.sld_components.main_breaker_kaic > 0,
             ]
             total_fields += len(sld_checks)
-            populated_fields += sum(1 for c in sld_checks if c)
+            populated_fields += sum(1 for chk in sld_checks if chk)
 
         # Feeder telemetry
         if data.feeder_telemetry:
@@ -504,7 +510,7 @@ def evaluate_extraction_completeness(dataset: GoldenDataset) -> dict[str, Any]:
                 data.feeder_telemetry.available_fault_duty_mva is not None,
             ]
             total_fields += len(fd_checks)
-            populated_fields += sum(1 for c in fd_checks if c)
+            populated_fields += sum(1 for chk in fd_checks if chk)
 
     completeness_score = populated_fields / total_fields if total_fields > 0 else 0.0
 
@@ -556,8 +562,10 @@ def build_deepeval_test_cases(
 
     for app in dataset.applications:
         screen_results, deficiencies = run_deterministic_screens(app.application_data)
-        failing_screens = [s.screen_name for s in screen_results if s.status == ScreenStatus.FAIL]
-        citations = [d.tariff_citation for d in deficiencies]
+        failing_screens = [
+            scr.screen_name for scr in screen_results if scr.status == ScreenStatus.FAIL
+        ]
+        citations = [def_item.tariff_citation for def_item in deficiencies]
 
         input_prompt = (
             f"Interconnection Application: {app.application_name} ({app.application_id})\n"
@@ -740,7 +748,7 @@ def run_benchmarks(
         logger.info(f"Constructed {len(test_cases)} DeepEval LLMTestCase objects")
 
     # Overall CI/CD Gate
-    overall_passed = all(m.passed for m in metrics)
+    overall_passed = all(met.passed for met in metrics)
 
     report = BenchmarkReport(
         timestamp=datetime.now(UTC).isoformat(),
@@ -753,7 +761,7 @@ def run_benchmarks(
         summary={
             "overall_passed": overall_passed,
             "total_metrics_evaluated": len(metrics),
-            "passed_metrics_count": sum(1 for m in metrics if m.passed),
+            "passed_metrics_count": sum(1 for met in metrics if met.passed),
             "total_time_ms": round(elapsed_ms, 2),
             "mean_latency_ms": round(mean_latency_ms, 3),
         },
@@ -784,19 +792,19 @@ def print_benchmark_summary(report: BenchmarkReport) -> None:
     print(f"{'Metric':<38} | {'Score':<10} | {'Target':<10} | {'Status':<10}")
     print(subdivider)
 
-    for m in report.metrics:
-        if "Latency" in m.metric_name:
-            score_str = f"{m.score:.2f} ms"
-            target_str = f"<= {m.threshold:,.0f} ms"
-        elif "Hallucination" in m.metric_name:
-            score_str = f"{m.score * 100:.1f}%"
-            target_str = f"<= {m.threshold * 100:.1f}%"
+    for met in report.metrics:
+        if "Latency" in met.metric_name:
+            score_str = f"{met.score:.2f} ms"
+            target_str = f"<= {met.threshold:,.0f} ms"
+        elif "Hallucination" in met.metric_name:
+            score_str = f"{met.score * 100:.1f}%"
+            target_str = f"<= {met.threshold * 100:.1f}%"
         else:
-            score_str = f"{m.score * 100:.1f}%"
-            target_str = f">= {m.threshold * 100:.1f}%"
+            score_str = f"{met.score * 100:.1f}%"
+            target_str = f">= {met.threshold * 100:.1f}%"
 
-        status_str = "PASSED" if m.passed else "FAILED"
-        print(f"{m.metric_name:<38} | {score_str:<10} | {target_str:<10} | {status_str:<10}")
+        status_str = "PASSED" if met.passed else "FAILED"
+        print(f"{met.metric_name:<38} | {score_str:<10} | {target_str:<10} | {status_str:<10}")
 
     print(subdivider)
     gate_status = (

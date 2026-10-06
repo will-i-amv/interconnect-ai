@@ -88,7 +88,7 @@ class QdrantVectorStore:
             collection_exists = self._client.collection_exists(collection_name)
         except Exception:
             # Fallback for environments where collection_exists is not available
-            collections = [c.name for c in self._client.get_collections().collections]
+            collections = [col.name for col in self._client.get_collections().collections]
             collection_exists = collection_name in collections
 
         if collection_exists and recreate:
@@ -141,8 +141,8 @@ class QdrantVectorStore:
         total_indexed = 0
         chunk_list = list(chunks)
 
-        for i in range(0, len(chunk_list), batch_size):
-            batch = chunk_list[i : i + batch_size]
+        for batch_start in range(0, len(chunk_list), batch_size):
+            batch = chunk_list[batch_start : batch_start + batch_size]
             # Embed the context-prefixed content for maximum retrieval precision
             texts_to_embed = [chunk.content for chunk in batch]
             embeddings = embedding_service.embed_batch(texts_to_embed)

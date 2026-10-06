@@ -157,7 +157,8 @@ def _sanitize_for_telemetry(data: Any, max_len: int = 1000) -> Any:
         return _sanitize_for_telemetry(data.model_dump(mode="json"), max_len=max_len)
     if isinstance(data, dict):
         return {
-            str(k): _sanitize_for_telemetry(v, max_len=max_len) for k, v in list(data.items())[:50]
+            str(key): _sanitize_for_telemetry(val, max_len=max_len)
+            for key, val in list(data.items())[:50]
         }
     if isinstance(data, list | tuple | set):
         return [_sanitize_for_telemetry(item, max_len=max_len) for item in list(data)[:50]]
@@ -202,7 +203,7 @@ class InterconnectTracingCallback(BaseCallbackHandler):
             application_id=self.application_id,
             jurisdiction=self.jurisdiction,
             input_payload=_sanitize_for_telemetry(inputs),
-            tags={"run_id": str(run_id), **{t: "true" for t in (tags or [])}},
+            tags={"run_id": str(run_id), **{tag: "true" for tag in (tags or [])}},
             metadata=metadata or {},
         )
         self._active_spans[str(run_id)] = span_id
@@ -933,7 +934,7 @@ class InterconnectTracer:
         """Return list of completed or active traces, optionally filtered by application ID."""
         records = list(self._traces.values())
         if application_id:
-            return [t for t in records if t.application_id == application_id]
+            return [tr for tr in records if tr.application_id == application_id]
         return records
 
     def get_trace(self, trace_id: str) -> TraceRecord | None:
@@ -942,15 +943,15 @@ class InterconnectTracer:
 
     def get_latest_trace(self, application_id: str) -> TraceRecord | None:
         """Retrieve the most recent trace for an application ID."""
-        matches = [t for t in self._traces.values() if t.application_id == application_id]
+        matches = [tr for tr in self._traces.values() if tr.application_id == application_id]
         if not matches:
             return None
-        return max(matches, key=lambda t: t.start_time_utc)
+        return max(matches, key=lambda tr: tr.start_time_utc)
 
     def get_metrics(self, application_id: str | None = None) -> list[MetricRecord]:
         """Return metrics list, optionally filtered by application ID."""
         if application_id:
-            return [m for m in self._metrics if m.application_id == application_id]
+            return [met for met in self._metrics if met.application_id == application_id]
         return list(self._metrics)
 
     def clear(self) -> None:
@@ -969,13 +970,13 @@ class InterconnectTracer:
 
         spans_summary = [
             {
-                "name": s.name,
-                "type": s.span_type.value,
-                "duration_ms": s.duration_ms,
-                "status": s.status.value,
-                "error": s.error_message,
+                "name": sp.name,
+                "type": sp.span_type.value,
+                "duration_ms": sp.duration_ms,
+                "status": sp.status.value,
+                "error": sp.error_message,
             }
-            for s in trace.spans
+            for sp in trace.spans
         ]
 
         return {

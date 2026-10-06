@@ -123,9 +123,9 @@ class ScreeningReport(BaseModel):
     @property
     def passed_screens_count(self) -> int:
         """Count of screens with PASS status."""
-        return sum(1 for s in self.screens if s.status == ScreenStatus.PASS)
+        return sum(1 for scr in self.screens if scr.status == ScreenStatus.PASS)
 
     @property
     def failed_screens_count(self) -> int:
         """Count of screens with FAIL status."""
-        return sum(1 for s in self.screens if s.status == ScreenStatus.FAIL)
+        return sum(1 for scr in self.screens if scr.status == ScreenStatus.FAIL)

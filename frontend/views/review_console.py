@@ -17,7 +17,7 @@ def render_review_console(client: InterconnectApiClient, app_id: str) -> None:
     """Render the split-screen PDF document inspection and engineering evaluation console."""
     # 1. Fetch Application Catalog for quick selector
     apps = client.get_applications_catalog()
-    all_app_ids = [a["application_id"] for a in apps] if apps else [app_id]
+    all_app_ids = [app["application_id"] for app in apps] if apps else [app_id]
     current_index = all_app_ids.index(app_id) if app_id in all_app_ids else 0
 
     # 2. Top Header & Application Switcher
@@ -250,8 +250,8 @@ def _render_deficiencies(deficiencies: list[dict[str, Any]]) -> None:
 
     st.error(f"⚠️ {len(deficiencies)} Technical Deficiency(ies) Identified Under Electric Rule 21")
 
-    for d in deficiencies:
-        cure_days = d.get("cure_deadline_business_days", 10)
+    for def_item in deficiencies:
+        cure_days = def_item.get("cure_deadline_business_days", 10)
         with st.container():
             st.markdown(
                 f"""
@@ -261,19 +261,20 @@ def _render_deficiencies(deficiencies: list[dict[str, Any]]) -> None:
                     <div style="display: flex; justify-content: space-between;
                                 align-items: flex-start; margin-bottom: 6px;">
                         <span style="font-weight: 700; color: #fb7185;">
-                            {d.get("code")}: {d.get("title")}
+                            {def_item.get("code")}: {def_item.get("title")}
                         </span>
                         <span class="badge-fail">{cure_days} Days to Cure</span>
                     </div>
                     <div style="font-size: 0.85rem; color: #e2e8f0; margin-bottom: 6px;">
-                        {d.get("description")}
+                        {def_item.get("description")}
                     </div>
                     <div style="font-size: 0.82rem; color: #fecdd3; margin-bottom: 6px;">
-                        <strong>Required Cure Action:</strong> {d.get("required_cure_action")}
+                        <strong>Required Cure Action:</strong>
+                        {def_item.get("required_cure_action")}
                     </div>
                     <div style="font-size: 0.75rem; color: #94a3b8;">
-                        Tariff Citation: <code>{d.get("tariff_citation")}</code> &bull;
-                        Screen: <code>{d.get("violating_screen")}</code>
+                        Tariff Citation: <code>{def_item.get("tariff_citation")}</code> &bull;
+                        Screen: <code>{def_item.get("violating_screen")}</code>
                     </div>
                 </div>
                 """,

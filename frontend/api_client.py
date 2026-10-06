@@ -159,17 +159,19 @@ class InterconnectApiClient:
             "application_id": result.get("application_id", application_id),
             "overall_outcome": outcome_val,
             "screen_results": [
-                s.model_dump(mode="json") if hasattr(s, "model_dump") else s
-                for s in result.get("screen_results", [])
+                scr.model_dump(mode="json") if hasattr(scr, "model_dump") else scr
+                for scr in result.get("screen_results", [])
             ],
             "deficiencies": [
-                d.model_dump(mode="json") if hasattr(d, "model_dump") else d
-                for d in result.get("deficiencies", [])
+                def_item.model_dump(mode="json") if hasattr(def_item, "model_dump") else def_item
+                for def_item in result.get("deficiencies", [])
             ],
             "formal_letter_markdown": result.get("formal_letter_markdown"),
             "audit_log": [
-                a.model_dump(mode="json") if hasattr(a, "model_dump") else a
-                for a in result.get("audit_log", [])
+                audit_entry.model_dump(mode="json")
+                if hasattr(audit_entry, "model_dump")
+                else audit_entry
+                for audit_entry in result.get("audit_log", [])
             ],
             "execution_time_ms": 120.0,
             "requires_human_override": result.get("requires_human_override", False),

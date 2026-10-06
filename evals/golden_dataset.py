@@ -924,13 +924,13 @@ def build_golden_dataset() -> GoldenDataset:
         total_count=len(apps),
         pass_count=sum(
             1
-            for a in apps
-            if a.ground_truth.expected_overall_outcome == OverallOutcome.FAST_TRACK_APPROVED
+            for app in apps
+            if app.ground_truth.expected_overall_outcome == OverallOutcome.FAST_TRACK_APPROVED
         ),
         fail_count=sum(
             1
-            for a in apps
-            if a.ground_truth.expected_overall_outcome == OverallOutcome.DEFICIENCY_ISSUED
+            for app in apps
+            if app.ground_truth.expected_overall_outcome == OverallOutcome.DEFICIENCY_ISSUED
         ),
         applications=apps,
     )
@@ -979,8 +979,10 @@ def verify_golden_application(app: GoldenApplication) -> dict[str, Any]:
         Validation report dictionary with match booleans and diagnostics.
     """
     screen_results, deficiencies = run_deterministic_screens(app.application_data)
-    actual_failing_screens = [s.screen_id for s in screen_results if s.status == ScreenStatus.FAIL]
-    actual_deficiency_codes = [d.code for d in deficiencies]
+    actual_failing_screens = [
+        scr.screen_id for scr in screen_results if scr.status == ScreenStatus.FAIL
+    ]
+    actual_deficiency_codes = [def_item.code for def_item in deficiencies]
 
     has_failures = bool(actual_failing_screens)
     actual_outcome = (
@@ -1011,4 +1013,4 @@ def verify_golden_application(app: GoldenApplication) -> dict[str, Any]:
 def verify_all_golden_applications(dataset: GoldenDataset | None = None) -> list[dict[str, Any]]:
     """Run verification against all applications in the golden dataset."""
     active_dataset = dataset or load_golden_dataset()
-    return [verify_golden_application(a) for a in active_dataset.applications]
+    return [verify_golden_application(app) for app in active_dataset.applications]

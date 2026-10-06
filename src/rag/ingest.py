@@ -50,7 +50,7 @@ def ingest_tariffs(
     if prefer_pdf and pdf_files:
         files_to_process.extend(pdf_files)
         # Also include any markdown files that do NOT have a matching PDF stem
-        pdf_stems = {p.stem for p in pdf_files}
+        pdf_stems = {pdf.stem for pdf in pdf_files}
         for md in md_files:
             if md.stem not in pdf_stems:
                 files_to_process.append(md)
@@ -70,14 +70,14 @@ def ingest_tariffs(
         processed_docs += 1
         jurisdictions_seen.add(parsed_doc.jurisdiction)
 
-    total_words = sum(c.word_count for c in all_chunks)
+    total_words = sum(chk.word_count for chk in all_chunks)
     elapsed = round(time.perf_counter() - start_time, 3)
 
     summary = IngestionSummary(
         total_documents=processed_docs,
         total_chunks=len(all_chunks),
         total_words=total_words,
-        jurisdictions_indexed=sorted(jurisdictions_seen, key=lambda j: j.value),
+        jurisdictions_indexed=sorted(jurisdictions_seen, key=lambda jur: jur.value),
         output_manifest_path=(str(output_file) if (output_file and not dry_run) else None),
         execution_time_seconds=elapsed,
     )
@@ -129,14 +129,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"  - Documents processed: {summary.total_documents}")
     print(f"  - Chunks generated:    {summary.total_chunks}")
     print(f"  - Total words:         {summary.total_words}")
-    print(f"  - Jurisdictions:       {[j.value for j in summary.jurisdictions_indexed]}")
+    print(f"  - Jurisdictions:       {[jur.value for jur in summary.jurisdictions_indexed]}")
     if summary.output_manifest_path:
         print(f"  - Saved manifest:      {summary.output_manifest_path}")
 
     # Display preview of top 3 chunks
     print("\n--- Sample Chunks Preview ---")
-    for i, chunk in enumerate(chunks[:3]):
-        print(f"[{i + 1}] ID: {chunk.chunk_id}")
+    for idx, chunk in enumerate(chunks[:3]):
+        print(f"[{idx + 1}] ID: {chunk.chunk_id}")
         print(f"    Title: {chunk.section_title} (Page {chunk.page_number})")
         print(f"    Path:  {chunk.hierarchy_path}")
         first_line = chunk.content.splitlines()[1] if len(chunk.content.splitlines()) > 1 else ""
