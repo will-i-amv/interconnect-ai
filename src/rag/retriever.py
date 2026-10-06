@@ -78,14 +78,14 @@ class HybridRetriever:
         """
         chunk_list = list(chunks)
         # Index in Qdrant
-        self.vector_store.index_chunks(
+        self.vector_store.index(
             chunks=chunk_list,
             embedding_service=self.embedding_service,
             collection_name=self.collection_name,
             recreate_collection=recreate_collection,
         )
         # Index in BM25
-        self.bm25_index.index_chunks(chunk_list)
+        self.bm25_index.index(chunk_list)
         return len(chunk_list)
 
     def retrieve(

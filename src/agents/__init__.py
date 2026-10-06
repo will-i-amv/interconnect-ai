@@ -11,6 +11,9 @@ from src.agents.state import (
     AuditEntry,
     InterconnectionState,
     WorkflowStep,
+    append_citations,
+    append_deficiencies,
+    append_screens,
 )
 from src.agents.vision_extractor import (
     CutsheetExtractionResult,
@@ -33,6 +36,9 @@ __all__ = [
     "SLDExtractionResult",
     "SLDVisionExtractor",
     "WorkflowStep",
+    "append_citations",
+    "append_deficiencies",
+    "append_screens",
     "create_interconnection_graph",
     "detect_device",
     "export_letter_pdf",

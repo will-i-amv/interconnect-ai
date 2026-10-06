@@ -109,7 +109,7 @@ class QdrantVectorStore:
                 ),
             )
 
-    def index_chunks(
+    def index(
         self,
         chunks: Sequence[TariffChunk],
         embedding_service: BaseEmbeddingService,
@@ -167,6 +167,8 @@ class QdrantVectorStore:
         )
         return total_indexed
 
+    index_chunks = index
+
     def search(
         self,
         query_vector: list[float],
@@ -213,7 +215,7 @@ class QdrantVectorStore:
 
         return scored_chunks
 
-    def count_points(self, collection_name: str = DEFAULT_COLLECTION_NAME) -> int:
+    def count(self, collection_name: str = DEFAULT_COLLECTION_NAME) -> int:
         """Return total number of points in the collection."""
         try:
             res = self._client.count(collection_name=collection_name)
@@ -221,7 +223,7 @@ class QdrantVectorStore:
         except Exception:
             return 0
 
-    count = count_points
+    count_points = count
 
     def delete_collection(self, collection_name: str = DEFAULT_COLLECTION_NAME) -> bool:
         """Delete collection if it exists."""

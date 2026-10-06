@@ -87,6 +87,17 @@ def append_screens(
     return list(screen_map.values())
 
 
+def append_deficiencies(
+    existing: Sequence[DeficiencyItem],
+    new_items: Sequence[DeficiencyItem],
+) -> list[DeficiencyItem]:
+    """Reducer that appends deficiency items, updating by error code if already present."""
+    def_map = {def_item.code: def_item for def_item in existing}
+    for item in new_items:
+        def_map[item.code] = item
+    return list(def_map.values())
+
+
 class InterconnectionState(TypedDict, total=False):
     """Central LangGraph State Schema for the Interconnection Reviewer Agent."""
 
@@ -102,7 +113,7 @@ class InterconnectionState(TypedDict, total=False):
 
     # Engineering Screening & Deficiency (Phase 3 Tools & Synthesis)
     screen_results: Annotated[list[ScreenResult], append_screens]
-    deficiencies: list[DeficiencyItem]
+    deficiencies: Annotated[list[DeficiencyItem], append_deficiencies]
     screening_report: ScreeningReport | None
     formal_letter_markdown: str | None
 

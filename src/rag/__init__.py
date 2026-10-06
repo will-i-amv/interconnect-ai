@@ -22,6 +22,7 @@ from src.rag.reranker import (
     BGEReranker,
     DeterministicMockReranker,
     build_citation,
+    create_citation,
     get_reranker,
 )
 from src.rag.retriever import HybridRetriever
@@ -51,6 +52,7 @@ __all__ = [
     "DeterministicMockReranker",
     "HybridRetriever",
     "build_citation",
+    "create_citation",
     "get_reranker",
 ]
 

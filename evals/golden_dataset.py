@@ -160,7 +160,7 @@ def _create_standard_transformer(
     )
 
 
-def build_golden_dataset() -> GoldenDataset:
+def create_golden_dataset() -> GoldenDataset:
     """Construct the complete 25-application golden test set."""
     apps: list[GoldenApplication] = []
 
@@ -936,6 +936,9 @@ def build_golden_dataset() -> GoldenDataset:
     )
 
 
+build_golden_dataset = create_golden_dataset
+
+
 # -----------------------------------------------------------------------------
 # Golden Dataset Persistence & Validation Utilities
 # -----------------------------------------------------------------------------
@@ -949,7 +952,7 @@ def get_golden_dataset_path() -> Path:
 def save_golden_dataset(path: Path | None = None) -> Path:
     """Build and write the golden test set to disk in JSON format."""
     target_path = path or get_golden_dataset_path()
-    dataset = build_golden_dataset()
+    dataset = create_golden_dataset()
     data_dict = dataset.model_dump(mode="json")
 
     target_path.parent.mkdir(parents=True, exist_ok=True)

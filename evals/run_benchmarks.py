@@ -526,7 +526,7 @@ def evaluate_extraction_completeness(dataset: GoldenDataset) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-def build_deepeval_test_cases(
+def create_deepeval_test_cases(
     dataset: GoldenDataset,
 ) -> list[Any]:
     """Construct DeepEval LLMTestCase objects for all golden dataset applications.
@@ -601,6 +601,9 @@ def build_deepeval_test_cases(
         test_cases.append(tc)
 
     return test_cases
+
+
+build_deepeval_test_cases = create_deepeval_test_cases
 
 
 # ---------------------------------------------------------------------------
@@ -744,7 +747,7 @@ def run_benchmarks(
 
     # Optional DeepEval LLM evaluation
     if run_deepeval_llm:
-        test_cases = build_deepeval_test_cases(dataset)
+        test_cases = create_deepeval_test_cases(dataset)
         logger.info(f"Constructed {len(test_cases)} DeepEval LLMTestCase objects")
 
     # Overall CI/CD Gate

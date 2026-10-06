@@ -168,7 +168,7 @@ class BM25Index:
         self._bm25: BM25Okapi | None = None
 
         if chunks:
-            self.index_chunks(chunks)
+            self.index(chunks)
 
     @property
     def chunks(self) -> list[TariffChunk]:
@@ -179,7 +179,7 @@ class BM25Index:
         """Return number of indexed chunks."""
         return len(self._chunks)
 
-    def index_chunks(self, chunks: Sequence[TariffChunk]) -> int:
+    def index(self, chunks: Sequence[TariffChunk]) -> int:
         """Index a collection of TariffChunks into the BM25 model."""
         self._chunks = list(chunks)
         self._corpus = [tokenize_regulatory_text(chk.content) for chk in self._chunks]
@@ -193,6 +193,8 @@ class BM25Index:
         else:
             self._bm25 = None
         return len(self._chunks)
+
+    index_chunks = index
 
     def search(
         self,

@@ -20,7 +20,7 @@ from src.schemas.tariff import (
 logger = logging.getLogger(__name__)
 
 
-def build_citation(
+def create_citation(
     chunk: TariffChunk,
     score: float,
     quote: str | None = None,
@@ -70,6 +70,9 @@ def build_citation(
         exact_quote=exact_quote,
         chunk_id=chunk.chunk_id,
     )
+
+
+build_citation = create_citation
 
 
 class BaseReranker(ABC):
@@ -217,7 +220,7 @@ class BGEReranker(BaseReranker):
 
         results: list[RerankedResult] = []
         for rank, (chunk, score, fused) in enumerate(scored_pairs[:top_n], start=1):
-            citation = build_citation(chunk=chunk, score=score)
+            citation = create_citation(chunk=chunk, score=score)
             results.append(
                 RerankedResult(
                     chunk=chunk,
@@ -292,7 +295,7 @@ class DeterministicMockReranker(BaseReranker):
 
         results: list[RerankedResult] = []
         for rank, (chunk, score, fused) in enumerate(scored[:top_n], start=1):
-            citation = build_citation(chunk=chunk, score=score)
+            citation = create_citation(chunk=chunk, score=score)
             results.append(
                 RerankedResult(
                     chunk=chunk,
