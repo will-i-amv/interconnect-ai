@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 
 @get_tracer().trace_node("intake")
-def intake_node(state: InterconnectionState) -> dict[str, Any]:
+def run_intake_node(state: InterconnectionState) -> dict[str, Any]:
     """Validate incoming application package and establish initial state baseline."""
     app_id = state.get("application_id")
     if not app_id:
@@ -69,7 +69,7 @@ def intake_node(state: InterconnectionState) -> dict[str, Any]:
 
 
 @get_tracer().trace_node("extraction")
-def extraction_node(state: InterconnectionState) -> dict[str, Any]:
+def run_extraction_node(state: InterconnectionState) -> dict[str, Any]:
     """Validate or extract electrical parameters (Inverter, Transformer, SLD, Telemetry)."""
     app_id = state.get("application_id", "")
     app_data = state.get("application_data")
@@ -166,7 +166,7 @@ def extraction_node(state: InterconnectionState) -> dict[str, Any]:
 
 
 @get_tracer().trace_node("retrieval")
-def retrieval_node(state: InterconnectionState) -> dict[str, Any]:
+def run_retrieval_node(state: InterconnectionState) -> dict[str, Any]:
     """Retrieve regulatory grounding clauses and tariffs for the active jurisdiction."""
     app_id = state.get("application_id", "UNKNOWN")
 
@@ -233,7 +233,7 @@ def retrieval_node(state: InterconnectionState) -> dict[str, Any]:
 
 
 @get_tracer().trace_node("screening")
-def screening_node(state: InterconnectionState) -> dict[str, Any]:
+def run_screening_node(state: InterconnectionState) -> dict[str, Any]:
     """Evaluate deterministic engineering screens and record any deficiencies."""
     app_data = state.get("application_data")
     if not app_data:
@@ -267,7 +267,7 @@ def screening_node(state: InterconnectionState) -> dict[str, Any]:
 
 
 @get_tracer().trace_node("synthesis")
-def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
+def run_synthesis_node(state: InterconnectionState) -> dict[str, Any]:
     """Assemble final formal ScreeningReport and determine approval or deficiency status."""
     app_id = state.get("application_id", "UNKNOWN")
     screen_results = state.get("screen_results", [])
@@ -340,7 +340,7 @@ def synthesis_node(state: InterconnectionState) -> dict[str, Any]:
 
 
 @get_tracer().trace_node("human_review")
-def human_review_node(state: InterconnectionState) -> dict[str, Any]:
+def run_human_review_node(state: InterconnectionState) -> dict[str, Any]:
     """Human-in-the-loop review checkpoint for overrides and sign-off."""
     app_id = state.get("application_id", "UNKNOWN")
     return {
@@ -356,7 +356,7 @@ def human_review_node(state: InterconnectionState) -> dict[str, Any]:
 
 
 @get_tracer().trace_node("error_rollback")
-def error_rollback_node(state: InterconnectionState) -> dict[str, Any]:
+def run_error_rollback_node(state: InterconnectionState) -> dict[str, Any]:
     """Safely catch node failures, log diagnostics, and prevent workflow crash."""
     app_id = state.get("application_id", "UNKNOWN")
     err_msgs = state.get("errors", ["Unknown execution error occurred."])
@@ -428,13 +428,13 @@ def create_interconnection_graph(
     workflow = StateGraph(InterconnectionState)
 
     # Add core workflow nodes
-    workflow.add_node("intake", intake_node)
-    workflow.add_node("extraction", extraction_node)
-    workflow.add_node("retrieval", retrieval_node)
-    workflow.add_node("screening", screening_node)
-    workflow.add_node("synthesis", synthesis_node)
-    workflow.add_node("human_review", human_review_node)
-    workflow.add_node("error_rollback", error_rollback_node)
+    workflow.add_node("intake", run_intake_node)
+    workflow.add_node("extraction", run_extraction_node)
+    workflow.add_node("retrieval", run_retrieval_node)
+    workflow.add_node("screening", run_screening_node)
+    workflow.add_node("synthesis", run_synthesis_node)
+    workflow.add_node("human_review", run_human_review_node)
+    workflow.add_node("error_rollback", run_error_rollback_node)
 
     # Define edges and conditional transitions
     workflow.add_edge(START, "intake")
@@ -454,3 +454,16 @@ def create_interconnection_graph(
     active_checkpointer = checkpointer if checkpointer is not None else MemorySaver()
 
     return workflow.compile(checkpointer=active_checkpointer)
+
+
+# -----------------------------------------------------------------------------
+# Backwards-Compatibility Aliases
+# -----------------------------------------------------------------------------
+
+intake_node = run_intake_node
+extraction_node = run_extraction_node
+retrieval_node = run_retrieval_node
+screening_node = run_screening_node
+synthesis_node = run_synthesis_node
+human_review_node = run_human_review_node
+error_rollback_node = run_error_rollback_node

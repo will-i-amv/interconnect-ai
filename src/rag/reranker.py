@@ -151,9 +151,11 @@ class BGEReranker(BaseReranker):
         self._tokenizer.enable_padding(length=512)
 
     @staticmethod
-    def _sigmoid(logit: float) -> float:
+    def _calculate_sigmoid(logit: float) -> float:
         """Map raw unbounded cross-encoder logits to [0.0, 1.0]."""
         return 1.0 / (1.0 + math.exp(-logit))
+
+    _sigmoid = _calculate_sigmoid
 
     def rerank(
         self,

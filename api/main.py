@@ -34,7 +34,7 @@ def create_app() -> FastAPI:
         summary="Service health check",
         tags=["system"],
     )
-    async def health_check() -> HealthCheckResponse:
+    async def check_health() -> HealthCheckResponse:
         """Return operational health status, API version, and supported jurisdictions."""
         return HealthCheckResponse()
 

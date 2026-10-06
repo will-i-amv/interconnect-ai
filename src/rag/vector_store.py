@@ -213,13 +213,15 @@ class QdrantVectorStore:
 
         return scored_chunks
 
-    def count(self, collection_name: str = DEFAULT_COLLECTION_NAME) -> int:
+    def count_points(self, collection_name: str = DEFAULT_COLLECTION_NAME) -> int:
         """Return total number of points in the collection."""
         try:
             res = self._client.count(collection_name=collection_name)
             return res.count
         except Exception:
             return 0
+
+    count = count_points
 
     def delete_collection(self, collection_name: str = DEFAULT_COLLECTION_NAME) -> bool:
         """Delete collection if it exists."""

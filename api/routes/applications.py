@@ -277,7 +277,7 @@ async def run_screening(request: ScreeningRunRequest) -> ScreeningRunResponse:
 # -----------------------------------------------------------------------------
 
 
-async def _sse_event_generator(initial_state: dict[str, Any]):
+async def _generate_sse_events(initial_state: dict[str, Any]):
     """Yield Server-Sent Events for each node update during LangGraph execution."""
     app_id = initial_state.get("application_id", "UNKNOWN")
     thread_id = f"api-stream-{app_id}-{uuid.uuid4().hex[:8]}"
@@ -286,7 +286,7 @@ async def _sse_event_generator(initial_state: dict[str, Any]):
     queue: asyncio.Queue[tuple[str, dict[str, Any]] | None] = asyncio.Queue()
     loop = asyncio.get_running_loop()
 
-    def _sync_worker():
+    def _run_sync_worker():
         tracer = get_tracer()
         try:
             with tracer.trace(
@@ -371,7 +371,7 @@ async def _sse_event_generator(initial_state: dict[str, Any]):
             loop.call_soon_threadsafe(queue.put_nowait, None)
 
     # Launch graph worker in background thread
-    worker_thread = threading.Thread(target=_sync_worker, daemon=True)
+    worker_thread = threading.Thread(target=_run_sync_worker, daemon=True)
     worker_thread.start()
 
     # Yield initial start notification
@@ -391,6 +391,9 @@ async def _sse_event_generator(initial_state: dict[str, Any]):
         yield f"event: {event_name}\ndata: {serialized_data}\n\n"
 
 
+_sse_event_generator = _generate_sse_events
+
+
 @router.post(
     "/screen/stream",
     summary="Stream real-time screening state transitions via Server-Sent Events (POST)",
@@ -404,7 +407,7 @@ async def stream_screening_post(request: ScreeningRunRequest) -> StreamingRespon
         jurisdiction=request.jurisdiction,
     )
     return StreamingResponse(
-        _sse_event_generator(initial_state),
+        _generate_sse_events(initial_state),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -428,7 +431,7 @@ async def stream_screening_get(
         jurisdiction=jurisdiction,
     )
     return StreamingResponse(
-        _sse_event_generator(initial_state),
+        _generate_sse_events(initial_state),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
