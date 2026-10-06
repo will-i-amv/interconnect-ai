@@ -127,10 +127,11 @@ class BGEReranker(BaseReranker):
         providers = self._providers
         if not providers:
             available = ort.get_available_providers()
-            if "CUDAExecutionProvider" in available:
-                providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
-            else:
-                providers = ["CPUExecutionProvider"]
+            providers = (
+                ["CUDAExecutionProvider", "CPUExecutionProvider"]
+                if "CUDAExecutionProvider" in available
+                else ["CPUExecutionProvider"]
+            )
 
         # Download ONNX model file and tokenizer from Hugging Face
         model_file = hf_hub_download(

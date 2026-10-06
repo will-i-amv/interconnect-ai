@@ -414,41 +414,49 @@ def evaluate_screen_e_short_circuit_duty(
     """
     threshold_desc = "Contribution <= 2.5% & Fault <= Breaker kAIC"
 
-    if app.sld_components and app.sld_components.main_breaker_kaic > 0:
-        breaker_kaic = app.sld_components.main_breaker_kaic
-        # Inverter fault current contribution is typically 1.2x rated current:
-        max_inverter_current_a = sum(
-            inv.max_continuous_current_a * inv.count for inv in app.inverters
-        )
-        der_fault_current_ka = (max_inverter_current_a * 1.2) / 1000.0
+    if not app.sld_components or app.sld_components.main_breaker_kaic <= 0:
+        return ScreenResult(
+            screen_id=ScreenId.SCREEN_E_SHORT_CIRCUIT_DUTY,
+            screen_name="Short-Circuit Current Duty Screen",
+            status=ScreenStatus.PASS,
+            calculated_value="Within standard inverter limits",
+            threshold_value=threshold_desc,
+            citation="CPUC Rule 21 Section D Screen E",
+            reasoning=(
+                "DER short-circuit duty contribution complies with standard distribution limits."
+            ),
+        ), None
 
-        if der_fault_current_ka < breaker_kaic:
-            result = ScreenResult(
-                screen_id=ScreenId.SCREEN_E_SHORT_CIRCUIT_DUTY,
-                screen_name="Short-Circuit Current Duty Screen",
-                status=ScreenStatus.PASS,
-                calculated_value=(
-                    f"DER {der_fault_current_ka:.2f} kA < Breaker {breaker_kaic:.1f} kAIC"
-                ),
-                threshold_value=threshold_desc,
-                citation="CPUC Rule 21 Section D Screen E",
-                reasoning=(
-                    f"DER maximum fault contribution of {der_fault_current_ka:.2f} kA is within "
-                    f"main service circuit breaker rating of {breaker_kaic:.1f} kAIC."
-                ),
-            )
-            return result, None
+    breaker_kaic = app.sld_components.main_breaker_kaic
+    # Inverter fault current contribution is typically 1.2x rated current:
+    max_inverter_current_a = sum(inv.max_continuous_current_a * inv.count for inv in app.inverters)
+    der_fault_current_ka = (max_inverter_current_a * 1.2) / 1000.0
 
-    result = ScreenResult(
+    if der_fault_current_ka >= breaker_kaic:
+        return ScreenResult(
+            screen_id=ScreenId.SCREEN_E_SHORT_CIRCUIT_DUTY,
+            screen_name="Short-Circuit Current Duty Screen",
+            status=ScreenStatus.PASS,
+            calculated_value="Within standard inverter limits",
+            threshold_value=threshold_desc,
+            citation="CPUC Rule 21 Section D Screen E",
+            reasoning=(
+                "DER short-circuit duty contribution complies with standard distribution limits."
+            ),
+        ), None
+
+    return ScreenResult(
         screen_id=ScreenId.SCREEN_E_SHORT_CIRCUIT_DUTY,
         screen_name="Short-Circuit Current Duty Screen",
         status=ScreenStatus.PASS,
-        calculated_value="Within standard inverter limits",
+        calculated_value=(f"DER {der_fault_current_ka:.2f} kA < Breaker {breaker_kaic:.1f} kAIC"),
         threshold_value=threshold_desc,
         citation="CPUC Rule 21 Section D Screen E",
-        reasoning="DER short-circuit duty contribution complies with standard distribution limits.",
-    )
-    return result, None
+        reasoning=(
+            f"DER maximum fault contribution of {der_fault_current_ka:.2f} kA is within "
+            f"main service circuit breaker rating of {breaker_kaic:.1f} kAIC."
+        ),
+    ), None
 
 
 def evaluate_screen_f_short_circuit_ratio(
@@ -464,76 +472,74 @@ def evaluate_screen_f_short_circuit_ratio(
     threshold_scr = 20.0
     der_mva = app.total_export_capacity_kw / 1000.0
 
-    if (
+    has_telemetry_fault_duty = bool(
         app.feeder_telemetry
         and app.feeder_telemetry.available_fault_duty_mva
         and app.feeder_telemetry.available_fault_duty_mva > 0
         and der_mva > 0
-    ):
-        scr = calculate_short_circuit_ratio(
-            available_fault_duty_mva=app.feeder_telemetry.available_fault_duty_mva,
-            der_capacity_mva=der_mva,
-        )
+    )
 
-        if scr >= threshold_scr:
-            result = ScreenResult(
-                screen_id=ScreenId.SCREEN_F_SHORT_CIRCUIT_RATIO,
-                screen_name="Short-Circuit Ratio Screen",
-                status=ScreenStatus.PASS,
-                calculated_value=scr,
-                threshold_value=f">= {threshold_scr:.1f}",
-                citation="CPUC Rule 21 Section D Screen F",
-                reasoning=(
-                    f"Calculated short-circuit ratio of {scr:.1f} meets or exceeds "
-                    f"the minimum grid stiffness threshold of {threshold_scr:.1f}."
-                ),
-            )
-            return result, None
-
-        result = ScreenResult(
+    if not has_telemetry_fault_duty:
+        # When available fault duty is not explicitly measured in telemetry,
+        # distribution class connections pass with standard stiff-bus presumption.
+        return ScreenResult(
             screen_id=ScreenId.SCREEN_F_SHORT_CIRCUIT_RATIO,
             screen_name="Short-Circuit Ratio Screen",
-            status=ScreenStatus.FAIL,
+            status=ScreenStatus.PASS,
+            calculated_value="Presumed stiff grid (> 20.0)",
+            threshold_value=f">= {threshold_scr:.1f}",
+            citation="CPUC Rule 21 Section D Screen F",
+            reasoning=(
+                "Standard distribution primary voltage verifies adequate short-circuit stiffness "
+                "for proposed inverter capacity."
+            ),
+        ), None
+
+    scr = calculate_short_circuit_ratio(
+        available_fault_duty_mva=app.feeder_telemetry.available_fault_duty_mva,
+        der_capacity_mva=der_mva,
+    )
+
+    if scr >= threshold_scr:
+        return ScreenResult(
+            screen_id=ScreenId.SCREEN_F_SHORT_CIRCUIT_RATIO,
+            screen_name="Short-Circuit Ratio Screen",
+            status=ScreenStatus.PASS,
             calculated_value=scr,
             threshold_value=f">= {threshold_scr:.1f}",
             citation="CPUC Rule 21 Section D Screen F",
             reasoning=(
-                f"Calculated short-circuit ratio of {scr:.1f} is below the {threshold_scr:.1f} "
-                "threshold, indicating a weak grid connection at the PCC."
+                f"Calculated short-circuit ratio of {scr:.1f} meets or exceeds "
+                f"the minimum grid stiffness threshold of {threshold_scr:.1f}."
             ),
-            requires_human_override=True,
-        )
-        deficiency = DeficiencyItem(
-            code="DEF_SHORT_CIRCUIT_RATIO_LOW",
-            title="Short-Circuit Ratio Below Threshold",
-            description=(
-                f"Short-circuit ratio of {scr:.1f} is below the mandatory 20.0 threshold."
-            ),
-            violating_screen=ScreenId.SCREEN_F_SHORT_CIRCUIT_RATIO,
-            required_cure_action=(
-                "Submit transient stability study or reduce project export capacity to "
-                "satisfy the minimum short-circuit ratio."
-            ),
-            cure_deadline_business_days=10,
-            tariff_citation="CPUC Rule 21 Section D Screen F",
-        )
-        return result, deficiency
+        ), None
 
-    # When available fault duty is not explicitly measured in telemetry,
-    # distribution class connections pass with standard stiff-bus presumption.
     result = ScreenResult(
         screen_id=ScreenId.SCREEN_F_SHORT_CIRCUIT_RATIO,
         screen_name="Short-Circuit Ratio Screen",
-        status=ScreenStatus.PASS,
-        calculated_value="Presumed stiff grid (> 20.0)",
+        status=ScreenStatus.FAIL,
+        calculated_value=scr,
         threshold_value=f">= {threshold_scr:.1f}",
         citation="CPUC Rule 21 Section D Screen F",
         reasoning=(
-            "Standard distribution primary voltage verifies adequate short-circuit stiffness "
-            "for proposed inverter capacity."
+            f"Calculated short-circuit ratio of {scr:.1f} is below the {threshold_scr:.1f} "
+            "threshold, indicating a weak grid connection at the PCC."
         ),
+        requires_human_override=True,
     )
-    return result, None
+    deficiency = DeficiencyItem(
+        code="DEF_SHORT_CIRCUIT_RATIO_LOW",
+        title="Short-Circuit Ratio Below Threshold",
+        description=(f"Short-circuit ratio of {scr:.1f} is below the mandatory 20.0 threshold."),
+        violating_screen=ScreenId.SCREEN_F_SHORT_CIRCUIT_RATIO,
+        required_cure_action=(
+            "Submit transient stability study or reduce project export capacity to "
+            "satisfy the minimum short-circuit ratio."
+        ),
+        cure_deadline_business_days=10,
+        tariff_citation="CPUC Rule 21 Section D Screen F",
+    )
+    return result, deficiency
 
 
 def evaluate_screen_h_disconnect_switch(

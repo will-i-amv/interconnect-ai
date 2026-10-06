@@ -64,21 +64,23 @@ class FastEmbedEmbeddingService(BaseEmbeddingService):
 
     def _get_model(self) -> Any:
         """Lazy-load the underlying FastEmbed TextEmbedding instance."""
-        if self._model is None:
-            from fastembed import TextEmbedding
+        if self._model is not None:
+            return self._model
 
-            kwargs: dict[str, Any] = {"model_name": self._model_name}
-            if self._cache_dir:
-                kwargs["cache_dir"] = self._cache_dir
-            if self._threads:
-                kwargs["threads"] = self._threads
-            if self._providers:
-                kwargs["providers"] = self._providers
+        from fastembed import TextEmbedding
 
-            self._model = TextEmbedding(**kwargs)
-            # Discover dimension from a sample probe if needed
-            probe = next(self._model.embed(["probe"]))
-            self._dim = len(probe)
+        kwargs: dict[str, Any] = {"model_name": self._model_name}
+        if self._cache_dir:
+            kwargs["cache_dir"] = self._cache_dir
+        if self._threads:
+            kwargs["threads"] = self._threads
+        if self._providers:
+            kwargs["providers"] = self._providers
+
+        self._model = TextEmbedding(**kwargs)
+        # Discover dimension from a sample probe if needed
+        probe = next(self._model.embed(["probe"]))
+        self._dim = len(probe)
         return self._model
 
     @property
@@ -91,9 +93,9 @@ class FastEmbedEmbeddingService(BaseEmbeddingService):
         model = self._get_model()
         vectors = list(model.embed([text]))
         norm = float(np.linalg.norm(vectors[0]))
-        if norm > 0:
-            return (vectors[0] / norm).tolist()
-        return vectors[0].tolist()
+        if norm <= 0:
+            return vectors[0].tolist()
+        return (vectors[0] / norm).tolist()
 
     def embed_batch(self, texts: Sequence[str]) -> list[list[float]]:
         """Embed a batch of text strings into normalized vectors."""

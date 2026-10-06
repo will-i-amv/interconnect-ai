@@ -143,9 +143,11 @@ def _sanitize_for_telemetry(data: Any, max_len: int = 1000) -> Any:
     """Safely convert payloads into JSON-serializable summaries for telemetry."""
     if data is None:
         return None
-    if isinstance(data, str | int | float | bool):
-        if isinstance(data, str) and len(data) > max_len:
+    if isinstance(data, str):
+        if len(data) > max_len:
             return data[:max_len] + f"... [truncated {len(data) - max_len} chars]"
+        return data
+    if isinstance(data, int | float | bool):
         return data
     if isinstance(data, Enum):
         return data.value
@@ -324,22 +326,27 @@ class InterconnectTracingCallback(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         span_id = self._active_spans.pop(str(run_id), None)
-        if span_id:
-            llm_output = response.llm_output or {}
-            self.tracer.end_span(
-                span_id=span_id,
-                status=SpanStatus.OK,
-                output_payload={"generations_count": len(response.generations), **llm_output},
+        if not span_id:
+            return
+
+        llm_output = response.llm_output or {}
+        self.tracer.end_span(
+            span_id=span_id,
+            status=SpanStatus.OK,
+            output_payload={
+                "generations_count": len(response.generations),
+                **llm_output,
+            },
+        )
+        # Record token usage metric if present
+        if "token_usage" in llm_output:
+            tokens = llm_output["token_usage"].get("total_tokens", 0)
+            self.tracer.record_metric(
+                name="llm_total_tokens",
+                value=float(tokens),
+                unit="tokens",
+                application_id=self.application_id,
             )
-            # Record token usage metric if present
-            if "token_usage" in llm_output:
-                tokens = llm_output["token_usage"].get("total_tokens", 0)
-                self.tracer.record_metric(
-                    name="llm_total_tokens",
-                    value=float(tokens),
-                    unit="tokens",
-                    application_id=self.application_id,
-                )
 
     def on_llm_error(
         self,
@@ -350,12 +357,14 @@ class InterconnectTracingCallback(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         span_id = self._active_spans.pop(str(run_id), None)
-        if span_id:
-            self.tracer.end_span(
-                span_id=span_id,
-                status=SpanStatus.ERROR,
-                error_message=str(error),
-            )
+        if not span_id:
+            return
+
+        self.tracer.end_span(
+            span_id=span_id,
+            status=SpanStatus.ERROR,
+            error_message=str(error),
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -820,12 +829,14 @@ class InterconnectTracer:
                     jurisdiction=str(jurisdiction) if jurisdiction else None,
                     input_payload={
                         "current_step": (
-                            state.get("current_step").value
-                            if hasattr(state.get("current_step"), "value")
-                            else str(state.get("current_step"))
-                        )
-                        if isinstance(state, dict)
-                        else None,
+                            (
+                                state.get("current_step").value
+                                if hasattr(state.get("current_step"), "value")
+                                else str(state.get("current_step"))
+                            )
+                            if isinstance(state, dict)
+                            else None
+                        ),
                     },
                 )
                 span_status = SpanStatus.OK

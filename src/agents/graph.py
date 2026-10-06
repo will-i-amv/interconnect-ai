@@ -101,67 +101,67 @@ def extraction_node(state: InterconnectionState) -> dict[str, Any]:
         except Exception:
             pass
 
-    # If application_data is provided, enrich with multimodal extraction if SLD/cutsheet available
-    if app_data is not None:
-        enriched_app = app_data
-        if sld_path or cutsheet_path:
-            try:
-                enriched_app = extractor.enrich_application(
-                    app_data, sld_path=sld_path, cutsheet_path=cutsheet_path
-                )
-                audit_entries.append(
-                    AuditEntry(
-                        step=WorkflowStep.EXTRACTION,
-                        action=AuditAction.TOOL_INVOCATION,
-                        message="Enriched application parameters via MultimodalVisionExtractor",
-                        details={
-                            "sld_extracted": sld_path is not None,
-                            "cutsheet_extracted": cutsheet_path is not None,
-                            "device": extractor.device,
-                        },
-                    )
-                )
-            except Exception as e:
-                logger.warning(f"Multimodal enrichment warning: {e}")
-
-        audit_entries.append(
-            AuditEntry(
-                step=WorkflowStep.EXTRACTION,
-                action=AuditAction.STATE_TRANSITION,
-                message=(
-                    f"Verified electrical parameters: {enriched_app.total_export_capacity_kw} kW "
-                    f"export, {len(enriched_app.inverters)} inverter(s)"
-                ),
-                details={
-                    "export_kw": enriched_app.total_export_capacity_kw,
-                    "inverter_count": len(enriched_app.inverters),
-                    "has_disconnect_switch": (
-                        enriched_app.sld_components.has_utility_disconnect_switch
-                        if enriched_app.sld_components
-                        else None
-                    ),
-                },
-            )
-        )
-
+    # If app_data is not provided, record extraction error and pause for human override
+    if app_data is None:
         return {
             "current_step": WorkflowStep.EXTRACTION,
-            "application_data": enriched_app,
-            "audit_log": audit_entries,
+            "errors": ["Extraction failed: No structured application data provided or extracted."],
+            "audit_log": [
+                AuditEntry(
+                    step=WorkflowStep.EXTRACTION,
+                    action=AuditAction.ERROR_RECORDED,
+                    message="Missing application_data container",
+                )
+            ],
+            "requires_human_override": True,
         }
 
-    # If app_data is still None, record extraction error and pause for human override
+    # Enrich with multimodal extraction if SLD/cutsheet available
+    enriched_app = app_data
+    if sld_path or cutsheet_path:
+        try:
+            enriched_app = extractor.enrich_application(
+                app_data, sld_path=sld_path, cutsheet_path=cutsheet_path
+            )
+            audit_entries.append(
+                AuditEntry(
+                    step=WorkflowStep.EXTRACTION,
+                    action=AuditAction.TOOL_INVOCATION,
+                    message="Enriched application parameters via MultimodalVisionExtractor",
+                    details={
+                        "sld_extracted": sld_path is not None,
+                        "cutsheet_extracted": cutsheet_path is not None,
+                        "device": extractor.device,
+                    },
+                )
+            )
+        except Exception as e:
+            logger.warning(f"Multimodal enrichment warning: {e}")
+
+    audit_entries.append(
+        AuditEntry(
+            step=WorkflowStep.EXTRACTION,
+            action=AuditAction.STATE_TRANSITION,
+            message=(
+                f"Verified electrical parameters: {enriched_app.total_export_capacity_kw} kW "
+                f"export, {len(enriched_app.inverters)} inverter(s)"
+            ),
+            details={
+                "export_kw": enriched_app.total_export_capacity_kw,
+                "inverter_count": len(enriched_app.inverters),
+                "has_disconnect_switch": (
+                    enriched_app.sld_components.has_utility_disconnect_switch
+                    if enriched_app.sld_components
+                    else None
+                ),
+            },
+        )
+    )
+
     return {
         "current_step": WorkflowStep.EXTRACTION,
-        "errors": ["Extraction failed: No structured application data provided or extracted."],
-        "audit_log": [
-            AuditEntry(
-                step=WorkflowStep.EXTRACTION,
-                action=AuditAction.ERROR_RECORDED,
-                message="Missing application_data container",
-            )
-        ],
-        "requires_human_override": True,
+        "application_data": enriched_app,
+        "audit_log": audit_entries,
     }
 
 

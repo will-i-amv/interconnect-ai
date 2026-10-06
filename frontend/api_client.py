@@ -137,13 +137,12 @@ class InterconnectApiClient:
         from src.agents.graph import create_interconnection_graph
         from src.schemas.application import ApplicationSchema
 
-        if custom_schema is not None:
-            if isinstance(custom_schema, ApplicationSchema):
-                app_data = custom_schema
-            else:
-                app_data = ApplicationSchema.model_validate(custom_schema)
-        else:
+        if custom_schema is None:
             app_data = load_application_schema(application_id)
+        elif isinstance(custom_schema, ApplicationSchema):
+            app_data = custom_schema
+        else:
+            app_data = ApplicationSchema.model_validate(custom_schema)
 
         initial_state = {
             "application_id": application_id,
